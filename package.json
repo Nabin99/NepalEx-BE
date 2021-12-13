@@ -1,0 +1,21 @@
+{
+  "name": "nepalexp",
+  "version": "1.0.0",
+  "description": "server side code for nepal express system software",
+  "private": true,
+  "main": "server.js",
+  "scripts": {
+    "start": "node ./server.js",
+    "dev": "nodemon ./server.js"
+  },
+  "author": "Nabin Dhital",
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^2.0.15"
+  },
+  "dependencies": {
+    "express": "^4.17.1",
+    "mysql": "^2.18.1"
+  },
+  "type": "module"
+}
