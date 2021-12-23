@@ -2,6 +2,10 @@ import express from 'express';
 import trackingRoute from './routes/tracking.js';
 import clientRoute from './routes/client.js';
 import shipmentsRoute from './routes/shipments.js';
+import employeeRoute from './routes/employee.js';
+import exportsRoute from './routes/exports.js';
+import importsRoute from './routes/imports.js';
+import serviceProviderRoute from './routes/serviceProvider.js';
 
 const Port = process.env.PORT || 5000;
 const app = express();
@@ -28,6 +32,10 @@ app.use(express.json());
 app.use('/track', trackingRoute);
 app.use('/client', clientRoute);
 app.use('/shipment', shipmentsRoute);
+app.use('/employee', employeeRoute);
+app.use('/exports', exportsRoute);
+app.use('/imports', importsRoute);
+app.use('/service_provider', serviceProviderRoute);
 
 
 

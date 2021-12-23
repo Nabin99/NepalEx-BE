@@ -1,11 +1,11 @@
+import exportsShipmentsRoute from "./shipments/exportsShipments.js";
+import importsShipmentsRoute from "./shipments/importsShipments.js";
+
 import { Router } from "express";
-import { addNewClientDetails, getClientDetails } from "../controllers/clientController.js";
 
+const shipmentsRoute = Router();
 
-const router = Router();
+shipmentsRoute.use('/export', exportsShipmentsRoute);
+shipmentsRoute.use('/import', importsShipmentsRoute);
 
-router.post('/', addNewClientDetails);
-router.get('/:emailId', getClientDetails);
-
-
-export default router;
+export default shipmentsRoute;

@@ -1,41 +1,49 @@
 import dbConnection from "../dbConn/dbConn.js";
 
-
-class Client {
+export default class Employees {
     constructor(data) {
-
-        this.acType = data.acType;
         this.name = data.name;
         this.pEmail = data.pEmail;
         this.pContact = data.pContact;
         this.govId = data.govId;
-        this.address = data.address;
+        this.pAddr = data.pAddr;
+        this.tAddr = data.tAddr;
+        this.depart = data.depart;
         this.password = data.password;
-        this.clientInfo = JSON.stringify(data.clientInfo);
-        this.registeredTime = null;
-
+        this.employeeInfo = JSON.stringify(data.employeeInfo);
+        this.image = data.profileImage;
+        this.documents = JSON.stringify(data.documents);
+        this.entries = [
+            {
+                id: 'id',
+                action: 'creation',
+                date: new Date()
+            }
+        ]
     }
 
     save() {
         const saveData = new Promise((resolve, reject) => {
-            this.registeredTime = new Date();
-            const query = `INSERT INTO client_details (account_type,name,p_email,p_contact,govId,address,password,clientInfo,registered_time)
+            const query = `INSERT INTO employee_details (name,p_email,p_contact,govId,p_address,t_address,department,password,image,documents,employee_info,entries)
              VALUES (?)`;
-            const values = [[this.acType, this.name, this.pEmail, this.pContact, this.govId, this.address, this.password, this.clientInfo, this.registeredTime]];
+            const values = [[this.name, this.pEmail, this.pContact, this.govId, this.pAddr, this.tAddr, this.depart, this.password, this.image, this.documents, this.employeeInfo, this.entries]];
 
             dbConnection.query(query, values, (err, result) => {
                 if (err) reject(err);
+
                 else
                     resolve(result);
-            });
+            })
+
         });
 
         return saveData;
 
     }
+
     static findAll() {
         const allData = new Promise((resolve, reject) => {
-            const query = `SELECT * FROM client_details`;
+            const query = `SELECT * FROM employee_details`;
             dbConnection.query(query, (err, result) => {
                 if (err) reject(err);
                 else {
@@ -45,10 +53,12 @@ class Client {
         });
 
         return allData;
+
     }
+
     static findOne(key) {
         const Data = new Promise((resolve, reject) => {
-            const query = `SELECT * FROM client_details WHERE p_email = ?`;
+            const query = `SELECT * FROM employee_details WHERE p_email = ?`;
             dbConnection.query(query, [key], (err, result) => {
                 if (err) reject(err);
                 else {
@@ -64,5 +74,5 @@ class Client {
         return Data;
     }
 
+
 }
-export default Client;
