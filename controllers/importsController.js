@@ -3,10 +3,12 @@ import ImportsModel from "../models/importsModel.js"
 export const addNewImport = async (req, res, next) => {
     try {
         const importData = new ImportsModel(req.body);
+        console.log(req.body);
         res.send(await importData.save());
 
     }
     catch (err) {
+        console.log(err);
         res.send(err);
     }
 }

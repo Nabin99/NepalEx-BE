@@ -5,16 +5,16 @@ class ExportsShipments {
     constructor(data) {
         this.awbNo = data.awbNo;
         this.status = data.status;
-        this.shipperId = data.shipperId;
+        this.shipperId = data.shipper;
         this.consignee = data.consignee;
         this.destination = data.destination;
         this.postalCode = data.postalCode;
         this.remoteArea = data.remoteArea;
         this.service = data.service;
-        this.serviceProviderId = data.serviceProviderId;
+        this.serviceProviderId = data.serviceProvider;
         this.shipmentType = data.shipmentType;
-        this.documents = data.image;
-        this.details = {
+        //this.documents = data.image;
+        this.details = JSON.stringify({
             box: data.box,
             overSize: data.overSize,
             ironStrip: data.ironStrip,
@@ -28,30 +28,24 @@ class ExportsShipments {
             customsVal: data.customsVal,
             excRate: data.excRate,
             remarks: data.remarks
-        };
+        });
+        this.entryBy = 'employee';
         this.weightVerified = false;
         this.isBilled = false;
-        this.entries = [
-            {
-                id: 'id',
-                action: 'create',
-                date: new Date()
-            }
-        ];
 
 
     }
 
     save() {
         const saveData = new Promise((resolve, reject) => {
-            const query = `INSERT INTO exports_shipments_details (AWB_no,status,shipper_id,consignee,destination,postal_code,remote_area,service,service_provider_id,shipment_type,documents,details,weight_verified,is_billed,entries)
+            const query = `INSERT INTO exports_shipments_details (AWB_no,status,shipper_id,consignee,destination,postal_code,remote_area,service,service_provider_id,shipment_type,details,entry_by,weight_verified,is_billed)
              VALUES (?)`;
-            const values = [[this.awbNo, this.status, this.shipperId, this.consignee, this.destination, this.postalCode, this.remoteArea, this.service, this.serviceProviderId, this.shipmentType, this.documents, this.details, this.weightVerified, this.isBilled, this.entries]];
+            const values = [[this.awbNo, this.status, this.shipperId, this.consignee, this.destination, this.postalCode, this.remoteArea, this.service, this.serviceProviderId, this.shipmentType, this.details, this.entryBy, this.weightVerified, this.isBilled]];
 
             dbConnection.query(query, values, (err, result) => {
                 if (err) reject(err);
                 else
-                    resolve(result);
+                    resolve(result[0]);
             });
         });
 

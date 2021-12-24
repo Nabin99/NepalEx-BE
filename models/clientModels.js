@@ -12,21 +12,20 @@ class Client {
         this.address = data.address;
         this.password = data.password;
         this.clientInfo = JSON.stringify(data.clientInfo);
-        this.registeredTime = null;
+        this.registeredBy = 'manager';
 
     }
 
     save() {
         const saveData = new Promise((resolve, reject) => {
-            this.registeredTime = new Date();
-            const query = `INSERT INTO client_details (account_type,name,p_email,p_contact,govId,address,password,clientInfo,registered_time)
+            const query = `INSERT INTO client_details (account_type,name,p_email,p_contact,govId,address,password,registered_by,clientInfo)
              VALUES (?)`;
-            const values = [[this.acType, this.name, this.pEmail, this.pContact, this.govId, this.address, this.password, this.clientInfo, this.registeredTime]];
+            const values = [[this.acType, this.name, this.pEmail, this.pContact, this.govId, this.address, this.password, this.registeredBy, this.clientInfo]];
 
             dbConnection.query(query, values, (err, result) => {
                 if (err) reject(err);
                 else
-                    resolve(result);
+                    resolve(result[0]);
             });
         });
 
@@ -39,7 +38,7 @@ class Client {
             dbConnection.query(query, (err, result) => {
                 if (err) reject(err);
                 else {
-                    resolve(result);
+                    resolve(result[0]);
                 }
             });
         });

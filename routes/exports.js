@@ -6,6 +6,6 @@ const exportsRoute = Router();
 exportsRoute.route('/')
     .get(getAllExports)
     .post(addNewExportsDetails);
-exportsRoute.get('/:id');
+exportsRoute.get('/:id', getExport);
 
 export default exportsRoute;
