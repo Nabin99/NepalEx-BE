@@ -6,20 +6,18 @@ import employeeRoute from './routes/employee.js';
 import exportsRoute from './routes/exports.js';
 import importsRoute from './routes/imports.js';
 import serviceProviderRoute from './routes/serviceProvider.js';
+import loginRoutes from './routes/login.js';
+import { authenticateUserToken } from './authentication/userAuth.js';
 
-const Port = process.env.PORT || 5001;
+const Port = process.env.PORT || 5000;
 const app = express();
 
 
 //cors handling
 app.use((req, res, next) => {
     res.header("Access-Control-Allow-Origin", "http://localhost:3000");
-    res.header("Access-Control-Allow-Headers",
-        "Origin,X-Requested-With,Content-Type,Accept,Authorization");
-    if (req.method === 'OPTIONS') {
-        res.header('Access-Control-Allow-Methods', 'PUT,POST,PATCH,DELETE,GET');
-        return res.status(200).json({});
-    }
+    res.header("Access-Control-Allow-Headers", "Origin,X-Requested-With,Content-Type,Accept,Authorization");
+    res.header('Access-Control-Allow-Methods', 'PUT,POST,PATCH,DELETE,GET');
     next();
 });
 
@@ -28,14 +26,15 @@ app.use((req, res, next) => {
 app.use(express.json());
 
 
-//routesrs
+//routers
 app.use('/track', trackingRoute);
 app.use('/client', clientRoute);
-app.use('/shipment', shipmentsRoute);
-app.use('/employee', employeeRoute);
-app.use('/exports', exportsRoute);
-app.use('/imports', importsRoute);
-app.use('/service_provider', serviceProviderRoute);
+app.use('/shipment', authenticateUserToken, shipmentsRoute);
+app.use('/employee', authenticateUserToken, employeeRoute);
+app.use('/exports', authenticateUserToken, exportsRoute);
+app.use('/imports', authenticateUserToken, importsRoute);
+app.use('/service_provider', authenticateUserToken, serviceProviderRoute);
+app.use('/login', loginRoutes);
 
 
 

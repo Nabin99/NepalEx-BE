@@ -1,13 +1,13 @@
 import dotenv from 'dotenv';
 import jwt from 'jsonwebtoken';
-import { generateAccessToken } from './accessToken';
+import { generateAccessToken } from './accessToken.js';
 
 dotenv.config();
 
 
-const authenticateUserToken = (req, res, next) => {
+export const authenticateUserToken = (req, res, next) => {
     const authHeader = req.headers['authorization'];
-    const token = authHeader && authHeader.split[' '][1];
+    const token = authHeader && authHeader.split(' ')[1];
     if (token == null)
         return res.sendStatus(401);
 
@@ -19,7 +19,7 @@ const authenticateUserToken = (req, res, next) => {
 
 }
 
-const authenticateRefreshToken = (req, res, next) => {
+export const authenticateRefreshToken = (req, res, next) => {
     const refreshToken = req.body.token;
     if (refreshToken == null) return res.sendStatus(401);
     if (!refreshTokens.includes(refreshToken)) return res.sendStatus(401);
