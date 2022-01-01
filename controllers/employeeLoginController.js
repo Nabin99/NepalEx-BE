@@ -8,8 +8,8 @@ export const EmployeeCredentials = async (req, res, next) => {
             res.sendStatus(406);
         }
         else {
-            const accessToken = generateAccessToken({ ...data });
-            const refreshToken = generateRefreshToken({ ...data });
+            const accessToken = generateAccessToken({ ...data, headers: req.headers });
+            const refreshToken = generateRefreshToken({ ...data, headers: req.headers });
             res.send({ ...data, accessToken: accessToken, refreshToken: refreshToken });
         }
 
