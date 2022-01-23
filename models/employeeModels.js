@@ -18,7 +18,7 @@ export default class Employees {
 
     save() {
         const saveData = new Promise((resolve, reject) => {
-            const query = `INSERT INTO employee_details (name,p_email,p_contact,govId,p_address,t_address,department,password,employee_info,registered_by)
+            const query = `INSERT INTO employee_details (name,primary_email,primary_contact,gov_id,permanent_address,temporary_address,department,password,employee_info,registered_by)
              VALUES (?)`;
             const values = [[this.name, this.pEmail, this.pContact, this.govId, this.pAddr, this.tAddr, this.depart, this.password, this.employeeInfo, this.registeredBy]];
 
@@ -50,10 +50,27 @@ export default class Employees {
         return allData;
 
     }
+    static searchEmployee(email, password) {
+        const Data = new Promise((resolve, reject) => {
+            const query = `SELECT employee_id,name,primary_email,primary_contact,department,image FROM employee_details WHERE primary_email = ? and password = ?`;
+            dbConnection.query(query, [email, password], (err, result) => {
+                if (err) reject(err);
+                else {
+
+                    resolve(result[0]);
+                }
+
+
+            });
+
+        });
+
+        return Data;
+    }
 
     static findOne(key) {
         const Data = new Promise((resolve, reject) => {
-            const query = `SELECT * FROM employee_details WHERE p_email = ?`;
+            const query = `SELECT * FROM employee_details WHERE primary_email = ?`;
             dbConnection.query(query, [key], (err, result) => {
                 if (err) reject(err);
                 else {

@@ -1,8 +1,8 @@
-import ShipmentsModel from '../models/exportsShipmentsModels.js';
+import ExportsShipments from '../models/exportsShipmentsModels.js';
 
 export const getAllShipmentsDetails = async (req, res, next) => {
     try {
-        let data = await ShipmentsModel.findAll();
+        let data = await ExportsShipments.findAll();
         res.send(data);
     }
     catch (err) {
@@ -12,8 +12,8 @@ export const getAllShipmentsDetails = async (req, res, next) => {
 
 export const getShipmentDetails = async (req, res, next) => {
     try {
-        let data = await ShipmentsModel.findOne(req.params.awbNo);
-        console.log(data)
+
+        let data = await ExportsShipments.findOne(req.params.awbNo);
         res.send(data);
     }
     catch (err) {
@@ -24,13 +24,26 @@ export const getShipmentDetails = async (req, res, next) => {
 };
 
 export const addNewShipmentDetails = async (req, res, next) => {
-    const client = new ShipmentsModel(req.body);
+    const shimpentDetails = new ExportsShipments(req.body);
 
     try {
-        console.log(req.body);
-        let data = await client.save()
+        let data = await shimpentDetails.save()
         res.send(data);
 
+
+    }
+    catch (err) {
+        console.log(err);
+        res.send(err);
+
+    }
+}
+
+export const getActiveStatusShipments = async (req, res, next) => {
+
+    try {
+        let data = await ExportsShipments.activeShipments();
+        res.send(data);
 
     }
     catch (err) {

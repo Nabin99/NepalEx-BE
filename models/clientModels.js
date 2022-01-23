@@ -18,7 +18,7 @@ class Client {
 
     save() {
         const saveData = new Promise((resolve, reject) => {
-            const query = `INSERT INTO client_details (account_type,name,p_email,p_contact,govId,address,password,registered_by,clientInfo)
+            const query = `INSERT INTO client_details (account_type,name,primary_email,primary_contact,govId,address,password,registered_by,client_info)
              VALUES (?)`;
             const values = [[this.acType, this.name, this.pEmail, this.pContact, this.govId, this.address, this.password, this.registeredBy, this.clientInfo]];
 
@@ -47,7 +47,7 @@ class Client {
     }
     static findOne(key) {
         const Data = new Promise((resolve, reject) => {
-            const query = `SELECT * FROM client_details WHERE p_email = ?`;
+            const query = `SELECT * FROM client_details WHERE primary_email = ?`;
             dbConnection.query(query, [key], (err, result) => {
                 if (err) reject(err);
                 else {

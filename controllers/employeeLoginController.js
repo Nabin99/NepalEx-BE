@@ -1,9 +1,9 @@
-import EmployeeLoginModel from "../models/employeeLoginModels.js";
+import Employees from "../models/employeeModels.js";
 import { generateAccessToken, generateRefreshToken } from "../authentication/accessToken.js";
 
 export const EmployeeCredentials = async (req, res, next) => {
     try {
-        const data = await new EmployeeLoginModel(req.body.email, req.body.password).findOne();
+        const data = await Employees.findOne(req.body.email, req.body.password);
         if (data == undefined) {
             res.sendStatus(406);
         }

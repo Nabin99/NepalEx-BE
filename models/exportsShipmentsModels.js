@@ -71,11 +71,26 @@ class ExportsShipments {
             dbConnection.query(query, [key], (err, result) => {
                 if (err) reject(err);
                 else {
-
                     resolve(result[0]);
                 }
 
 
+            });
+
+        });
+
+        return Data;
+    }
+    static activeShipments() {
+        const Data = new Promise((resolve, reject) => {
+            const query = `SELECT shipments_id,AWB_no,status,shipper_id,consignee,destination,remote_area,service,service_provider_id,shipment_type,entry_date,weight_verified,is_billed FROM exports_shipments_details WHERE status != "Delivered" and status != "Returned"`;
+
+            dbConnection.query(query, (err, result) => {
+                if (err) reject(err);
+                else {
+
+                    resolve(result);
+                }
             });
 
         });
