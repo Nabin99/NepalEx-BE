@@ -52,3 +52,25 @@ export const getActiveStatusShipments = async (req, res, next) => {
 
     }
 }
+export const updateShipmentsStatus = async (req, res, next) => {
+
+    try {
+        let data = await ExportsShipments.updateStatus(req.body);
+        res.send(data);
+    }
+    catch (err) {
+        console.log(err);
+        res.send(err);
+    }
+}
+export const searchShipments = async (req, res, next) => {
+
+    try {
+        let data = await ExportsShipments.searchShipments(req.query);
+        res.send(data);
+    }
+    catch (err) {
+        console.log(err);
+        res.send(err);
+    }
+}
