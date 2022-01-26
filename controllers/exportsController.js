@@ -25,7 +25,20 @@ export const getAllExports = async (req, res, next) => {
 
 export const getExport = async (req, res, next) => {
     try {
-        res.send(await ExportsModel.findOne(req.params.id));
+        const data = await ExportsModel.findOne(req.params.customs_PPN);
+        data.details = JSON.parse(data.details);
+        res.send(data);
+    }
+    catch (err) {
+        res.send(err);
+    }
+}
+
+export const modifyExport = async (req, res, next) => {
+    try {
+        console.log(req.body)
+        const data = await ExportsModel.modifyExport(req.body);
+        res.send(data);
     }
     catch (err) {
         res.send(err);

@@ -1,4 +1,4 @@
-import { addNewExportsDetails, getAllExports, getExport } from "../controllers/exportsController.js";
+import { addNewExportsDetails, getAllExports, getExport, modifyExport } from "../controllers/exportsController.js";
 import { Router } from "express";
 
 const exportsRoute = Router();
@@ -6,6 +6,7 @@ const exportsRoute = Router();
 exportsRoute.route('/')
     .get(getAllExports)
     .post(addNewExportsDetails);
-exportsRoute.get('/:id', getExport);
+exportsRoute.get('/search_customsppn=:customs_PPN', getExport);
+exportsRoute.put('/modify_shipment', modifyExport)
 
 export default exportsRoute;
