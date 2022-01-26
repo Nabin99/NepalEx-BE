@@ -4,15 +4,9 @@ import dbConnection from "../dbConn/dbConn.js";
 class Client {
     constructor(data) {
 
-        this.acType = data.acType;
-        this.name = data.name;
-        this.pEmail = data.pEmail;
-        this.pContact = data.pContact;
-        this.govId = data.govId;
-        this.address = data.address;
-        this.password = data.password;
-        this.clientInfo = JSON.stringify(data.clientInfo);
-        this.registeredBy = 'manager';
+        this.data = data;
+        this.data.client_info = JSON.stringify(this.data.client_info);
+        this.data.registered_by = "manager";
 
     }
 
@@ -20,7 +14,7 @@ class Client {
         const saveData = new Promise((resolve, reject) => {
             const query = `INSERT INTO client_details (account_type,name,primary_email,primary_contact,govId,address,password,registered_by,client_info)
              VALUES (?)`;
-            const values = [[this.acType, this.name, this.pEmail, this.pContact, this.govId, this.address, this.password, this.registeredBy, this.clientInfo]];
+            const values = [[this.data.account_type, this.data.name, this.data.primary_email, this.data.primary_contact, this.data.govId, this.data.address, this.data.password, this.data.registered_by, this.data.client_info]];
 
             dbConnection.query(query, values, (err, result) => {
                 if (err) reject(err);

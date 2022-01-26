@@ -14,6 +14,7 @@ export const getShipmentDetails = async (req, res, next) => {
     try {
 
         let data = await ExportsShipments.findOne(req.params.awbNo);
+        data.details = JSON.parse(data.details);
         res.send(data);
     }
     catch (err) {
@@ -67,6 +68,18 @@ export const searchShipments = async (req, res, next) => {
 
     try {
         let data = await ExportsShipments.searchShipments(req.query);
+        res.send(data);
+    }
+    catch (err) {
+        console.log(err);
+        res.send(err);
+    }
+}
+
+export const modifyDetails = async (req, res, next) => {
+    console.log(req.body);
+    try {
+        let data = await ExportsShipments.modifyDetails(req.body);
         res.send(data);
     }
     catch (err) {

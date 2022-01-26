@@ -1,3 +1,4 @@
+"use strict";
 import express from 'express';
 import trackingRoute from './routes/tracking.js';
 import clientRoute from './routes/client.js';
@@ -9,6 +10,8 @@ import serviceProviderRoute from './routes/serviceProvider.js';
 import loginRoutes from './routes/login.js';
 import { authenticateUserToken } from './authentication/userAuth.js';
 import cors from 'cors';
+
+
 
 const Port = process.env.PORT || 5000;
 const app = express();

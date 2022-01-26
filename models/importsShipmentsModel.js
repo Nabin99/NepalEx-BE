@@ -10,7 +10,7 @@ export default class ImportsShipmentsModel {
         this.serviceProvider = data.serviceProvider;
         // this.documents = data.documents;
         this.details = JSON.stringify(data.details);
-        this.entryBy = 'employee';
+        this.entryBy = 1;
         this.isBilled = false;
 
     }
@@ -50,10 +50,42 @@ export default class ImportsShipmentsModel {
                 if (err)
                     reject(err);
                 else
-                    resolve(result);
+                    resolve(result[0]);
             });
 
         });
         return getData;
     }
+
+    static searchShipment(key) {
+        const getData = new Promise((resolve, reject) => {
+            const query = `SELECT * FROM imports_shipments_details WHERE AWB_no = ?`;
+            dbConnection.query(query, [key], (err, result) => {
+                if (err)
+                    reject(err);
+                else
+                    resolve(result[0]);
+            });
+
+        });
+        return getData;
+    }
+
+    static modifyShipment(data) {
+        data.details = JSON.stringify(data.details);
+
+        const saveData = new Promise((resolve, reject) => {
+            const query = `UPDATE imports_shipments_details SET AWB_no = ?, shipper = ?, consignee = ?, origin = ?, service = ?, service_provider = ?,details = ?,  is_billed = ?, bill_type = ? WHERE AWB_no = ?`;
+            const values = [data.AWB_no, data.shipper, data.consignee, data.origin, data.service, data.service_provider, data.details, data.is_billed, data.bill_type, data.id];
+            dbConnection.query(query, values, (err, result) => {
+                if (err) reject(err);
+                else
+                    resolve(result);
+            });
+        });
+
+        return saveData;
+
+    }
+
 }

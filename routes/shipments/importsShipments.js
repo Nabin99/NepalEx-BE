@@ -1,12 +1,12 @@
-import { getAllImports, getImport, addNewImport } from "../../controllers/importsShipmentsController.js";
+import { getAllImports, getImport, addNewImport, searchImportShipment, modifyImportShipment } from "../../controllers/importsShipmentsController.js";
 import { Router } from "express";
 
 const importsShipmentsRoute = Router();
 
-importsShipmentsRoute.route('/')
-    .get(getAllImports)
-    .post(addNewImport);
+importsShipmentsRoute.post('/', addNewImport);
 
-importsShipmentsRoute.get('/:id', getImport);
+importsShipmentsRoute.get('/search_id=:shipment_id', getImport);
+importsShipmentsRoute.get('/search_awbno=:AWB_no', searchImportShipment);
+importsShipmentsRoute.put('/modify_shipment', modifyImportShipment);
 
 export default importsShipmentsRoute;

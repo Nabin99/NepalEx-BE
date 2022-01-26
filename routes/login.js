@@ -7,5 +7,6 @@ const loginRoutes = Router();
 
 loginRoutes.use('/user', userLoginRoute);
 loginRoutes.use('/employee', employeeLoginRoute);
+loginRoutes.post('/refresh',);
 
 export default loginRoutes;
