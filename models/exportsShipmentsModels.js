@@ -39,7 +39,7 @@ class ExportsShipments {
     }
     static findOne(key) {
         const Data = new Promise((resolve, reject) => {
-            const query = `SELECT * FROM exports_shipments_details WHERE AWB_no = ?`;
+            const query = `SELECT * FROM exports_shipments_details WHERE shipments_id = ?`;
             dbConnection.query(query, [key], (err, result) => {
                 if (err) reject(err);
                 else {
@@ -93,7 +93,6 @@ class ExportsShipments {
             dbConnection.query(query, values, (err, result) => {
                 if (err) reject(err);
                 else {
-                    console.log(result)
                     resolve(result);
                 }
             });
@@ -104,15 +103,13 @@ class ExportsShipments {
     }
 
     static modifyDetails(data) {
-        console.log(data)
         data.details = JSON.stringify(data.details);
         const Data = new Promise((resolve, reject) => {
-            const query = `UPDATE exports_shipments_details SET AWB_no= ?,status= ?,shipper_id= ?,consignee= ?,destination= ?,postal_code= ?,remote_area= ?,service= ?,service_provider_id= ?,shipment_type= ?,details= ?,weight_verified= ?,is_billed=? WHERE AWB_no= ?`;
-            const values = [data.AWB_no, data.status, data.shipper_id, data.consignee, data.destination, data.postal_code, data.remote_area, data.service, data.service_provider_id, data.shipment_type, data.details, data.weight_verified, data.is_billed, data.id];
+            const query = `UPDATE exports_shipments_details SET AWB_no= ?,status= ?,shipper_id= ?,consignee= ?,destination= ?,postal_code= ?,remote_area= ?,service= ?,service_provider_id= ?,shipment_type= ?,details= ?,weight_verified= ?,is_billed=? WHERE shipments_id= ?`;
+            const values = [data.AWB_no, data.status, data.shipper_id, data.consignee, data.destination, data.postal_code, data.remote_area, data.service, data.service_provider_id, data.shipment_type, data.details, data.weight_verified, data.is_billed, data.shipments_id];
             dbConnection.query(query, values, (err, result) => {
                 if (err) reject(err);
                 else {
-                    console.log(result)
                     resolve(result);
                 }
             });
@@ -121,6 +118,68 @@ class ExportsShipments {
 
         return Data;
     }
+
+    static modifyExportShipmentAmts(data) {
+        data.bill_details = JSON.stringify(data.bill_details);
+        data.amounts_entered = 1;
+
+        const saveData = new Promise((resolve, reject) => {
+            const query = `UPDATE exports_shipments_details SET bill_details = ?, bill_type = ?, amounts_entered = ? WHERE shipments_id= ?`;
+            const values = [data.bill_details, data.bill_type, data.amounts_entered, data.shipments_id];
+            dbConnection.query(query, values, (err, result) => {
+                if (err) reject(err);
+                else
+                    resolve(result);
+            });
+        });
+
+        return saveData;
+
+    }
+    static findExportShipmentAmtsNull() {
+        const getData = new Promise((resolve, reject) => {
+            const query = `SELECT * FROM exports_shipments_details WHERE amounts_entered = 0`;
+            dbConnection.query(query, (err, result) => {
+                if (err)
+                    reject(err);
+                else
+                    resolve(result);
+            });
+
+        });
+        return getData;
+    }
+    static findExportShipmentUnverified() {
+        const getData = new Promise((resolve, reject) => {
+            const query = `SELECT * FROM exports_shipments_details WHERE weight_verified = 0`;
+            dbConnection.query(query, (err, result) => {
+                if (err)
+                    reject(err);
+                else
+                    resolve(result);
+            });
+
+        });
+        return getData;
+    }
+
+    static getExportDetails(key) {
+        const Data = new Promise((resolve, reject) => {
+            const query = `SELECT details FROM exports_shipments_details WHERE shipments_id = ?`;
+            dbConnection.query(query, [key], (err, result) => {
+                if (err) reject(err);
+                else {
+                    resolve(result[0]);
+                }
+
+
+            });
+
+        });
+
+        return Data;
+    }
+
 
 }
 export default ExportsShipments;

@@ -49,9 +49,26 @@ export const searchImportShipment = async (req, res, next) => {
 export const modifyImportShipment = async (req, res, next) => {
     try {
         const data = await ImportsShipmentsModel.modifyShipment(req.body);
-        console.log(data);
-        data.details = JSON.parse(data.details);
+        res.send(data);
+    }
+    catch (err) {
+        res.send(err);
+    }
+}
 
+export const modifyImportShipmentAmts = async (req, res, next) => {
+    try {
+        const data = await ImportsShipmentsModel.modifyImportShipmentAmts(req.body);
+        res.send(data);
+    }
+    catch (err) {
+        res.send(err);
+    }
+}
+
+export const getImportShipmentAmtsNull = async (req, res, next) => {
+    try {
+        const data = await ImportsShipmentsModel.findImportShipmentAmtsNull();
         res.send(data);
     }
     catch (err) {

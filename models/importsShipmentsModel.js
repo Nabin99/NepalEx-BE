@@ -75,8 +75,8 @@ export default class ImportsShipmentsModel {
         data.details = JSON.stringify(data.details);
 
         const saveData = new Promise((resolve, reject) => {
-            const query = `UPDATE imports_shipments_details SET AWB_no = ?, shipper = ?, consignee = ?, origin = ?, service = ?, service_provider = ?,details = ?,  is_billed = ?, bill_type = ? WHERE AWB_no = ?`;
-            const values = [data.AWB_no, data.shipper, data.consignee, data.origin, data.service, data.service_provider, data.details, data.is_billed, data.bill_type, data.id];
+            const query = `UPDATE imports_shipments_details SET AWB_no = ?, shipper = ?, consignee = ?, origin = ?, service = ?, service_provider = ?,details = ?,  is_billed = ?, bill_type = ? WHERE shipments_id = ?`;
+            const values = [data.AWB_no, data.shipper, data.consignee, data.origin, data.service, data.service_provider, data.details, data.is_billed, data.bill_type, data.shipments_id];
             dbConnection.query(query, values, (err, result) => {
                 if (err) reject(err);
                 else
@@ -86,6 +86,36 @@ export default class ImportsShipmentsModel {
 
         return saveData;
 
+    }
+    static modifyImportShipmentAmts(data) {
+        data.bill_details = JSON.stringify(data.bill_details);
+        data.amounts_entered = 1;
+
+        const saveData = new Promise((resolve, reject) => {
+            const query = `UPDATE imports_shipments_details SET bill_details = ?, bill_type = ?, amounts_entered = ? WHERE shipments_id= ?`;
+            const values = [data.bill_details, data.bill_type, data.amounts_entered, data.shipments_id];
+            dbConnection.query(query, values, (err, result) => {
+                if (err) reject(err);
+                else
+                    resolve(result);
+            });
+        });
+
+        return saveData;
+
+    }
+    static findImportShipmentAmtsNull() {
+        const getData = new Promise((resolve, reject) => {
+            const query = `SELECT * FROM imports_shipments_details WHERE amounts_entered = 0`;
+            dbConnection.query(query, (err, result) => {
+                if (err)
+                    reject(err);
+                else
+                    resolve(result);
+            });
+
+        });
+        return getData;
     }
 
 }

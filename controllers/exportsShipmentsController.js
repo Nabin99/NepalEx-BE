@@ -87,3 +87,45 @@ export const modifyDetails = async (req, res, next) => {
         res.send(err);
     }
 }
+
+export const modifyExportShipmentAmts = async (req, res, next) => {
+    try {
+        const data = await ExportsShipments.modifyExportShipmentAmts(req.body);
+        res.send(data);
+    }
+    catch (err) {
+        res.send(err);
+    }
+}
+
+export const getExportShipmentAmtsNull = async (req, res, next) => {
+    try {
+        const data = await ExportsShipments.findExportShipmentAmtsNull();
+        res.send(data);
+    }
+    catch (err) {
+        console.log(err)
+        res.send(err);
+    }
+}
+export const getExportShipmentUnverified = async (req, res, next) => {
+    try {
+        const data = await ExportsShipments.findExportShipmentUnverified();
+        res.send(data);
+    }
+    catch (err) {
+        console.log(err)
+        res.send(err);
+    }
+}
+export const getExportDetails = async (req, res, next) => {
+    try {
+        const data = await ExportsShipments.getExportDetails(req.params.shipments_id);
+        data.details = JSON.parse(data.details);
+        res.send(data);
+    }
+    catch (err) {
+        console.log(err)
+        res.send(err);
+    }
+}
