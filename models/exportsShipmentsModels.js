@@ -53,6 +53,22 @@ class ExportsShipments {
 
         return Data;
     }
+    static findOne$Awb(key) {
+        const Data = new Promise((resolve, reject) => {
+            const query = `SELECT * FROM exports_shipments_details WHERE AWB_no = ?`;
+            dbConnection.query(query, [key], (err, result) => {
+                if (err) reject(err);
+                else {
+                    resolve(result[0]);
+                }
+
+
+            });
+
+        });
+
+        return Data;
+    }
     static activeShipments() {
         const Data = new Promise((resolve, reject) => {
             const query = `SELECT exports_shipments_details.shipments_id,exports_shipments_details.AWB_no,exports_shipments_details.status,client_details.primary_email,exports_shipments_details.consignee,exports_shipments_details.destination,exports_shipments_details.remote_area,exports_shipments_details.service,exports_shipments_details.service_provider_id,exports_shipments_details.shipment_type,exports_shipments_details.entry_date,exports_shipments_details.weight_verified,exports_shipments_details.is_billed FROM ((exports_shipments_details INNER JOIN client_details ON exports_shipments_details.shipper_id= client_details.client_id)) WHERE exports_shipments_details.status != "Delivered" and exports_shipments_details.status != "Returned"`;
@@ -173,6 +189,24 @@ class ExportsShipments {
                 }
 
 
+            });
+
+        });
+
+        return Data;
+    }
+
+    static updateWeight(data) {
+        data.details = JSON.stringify(data.details);
+        data.weight_verified = 1;
+        const Data = new Promise((resolve, reject) => {
+            const query = `UPDATE exports_shipments_details SET details= ? ,bill_type =?, weight_verified = ? WHERE shipments_id= ?`;
+            const values = [data.details, data.bill_type, data.weight_verified, data.shipments_id];
+            dbConnection.query(query, values, (err, result) => {
+                if (err) reject(err);
+                else {
+                    resolve(result);
+                }
             });
 
         });

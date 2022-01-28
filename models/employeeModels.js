@@ -86,5 +86,40 @@ export default class Employees {
         return Data;
     }
 
+    static getActiveEmployeeDetails() {
+        const allData = new Promise((resolve, reject) => {
+            const query = `SELECT * FROM employee_details WHERE department!="Manager" AND department!="None"`;
+            dbConnection.query(query, (err, result) => {
+                if (err) reject(err);
+                else {
+                    resolve(result);
+
+                }
+            });
+        });
+
+        return allData;
+
+    }
+
+    static updateEmployeeDetails(data) {
+        data.employee_info = JSON.stringify(data.employee_info);
+        const saveData = new Promise((resolve, reject) => {
+            const query = `UPDATE employee_details SET name = ?,primary_email = ?,primary_contact = ?,gov_id = ?,permanent_address = ?,temporary_address = ?,department = ?,password = ?,employee_info = ? WHERE employee_id = ?`;
+            const values = [data.name, data.primary_email, data.primary_contact, data.govId, data.permanent_address, data.temporary_address, data.department, data.password, data.employeeInfo,];
+
+            dbConnection.query(query, values, (err, result) => {
+                if (err) reject(err);
+
+                else
+                    resolve(result[0]);
+            });
+
+        });
+
+        return saveData;
+
+    }
+
 
 }

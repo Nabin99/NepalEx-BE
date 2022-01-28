@@ -70,6 +70,19 @@ export default class ImportsShipmentsModel {
         });
         return getData;
     }
+    static searchShipmentAmts(key) {
+        const getData = new Promise((resolve, reject) => {
+            const query = `SELECT * FROM imports_shipments_details WHERE AWB_no = ?`;
+            dbConnection.query(query, [key], (err, result) => {
+                if (err)
+                    reject(err);
+                else
+                    resolve(result[0]);
+            });
+
+        });
+        return getData;
+    }
 
     static modifyShipment(data) {
         data.details = JSON.stringify(data.details);

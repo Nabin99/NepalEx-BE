@@ -1,12 +1,14 @@
-import { addNewEmployeeDetails, getAllEmployeeDetails, getEmployeeDetails } from "../controllers/employeeController.js";
+import { addNewEmployeeDetails, getActiveEmployeeDetails, getAllEmployeeDetails, getEmployeeDetails, updateEmployeeDetails } from "../controllers/employeeController.js";
 import { Router } from "express";
 
 const employeeRoute = Router();
 
 employeeRoute.route('/')
     .get(getAllEmployeeDetails)
-    .post(addNewEmployeeDetails);
+    .post(addNewEmployeeDetails)
+    .put(updateEmployeeDetails)
 
-employeeRoute.get('/:emailId', getEmployeeDetails);
+employeeRoute.get('/emailid=:employee_id', getEmployeeDetails);
+employeeRoute.get('/active_employees', getActiveEmployeeDetails)
 
 export default employeeRoute;

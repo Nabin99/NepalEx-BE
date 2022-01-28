@@ -45,6 +45,18 @@ export const searchImportShipment = async (req, res, next) => {
         res.send(err);
     }
 }
+export const searchImportShipmentAmts = async (req, res, next) => {
+    try {
+        const data = await ImportsShipmentsModel.searchShipmentAmts(req.params.AWB_no);
+
+        data.bill_details = JSON.parse(data.bill_details);
+        console.log(data);
+        res.send(data);
+    }
+    catch (err) {
+        res.send(err);
+    }
+}
 
 export const modifyImportShipment = async (req, res, next) => {
     try {

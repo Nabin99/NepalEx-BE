@@ -13,7 +13,7 @@ export const getAllShipmentsDetails = async (req, res, next) => {
 export const getShipmentDetails = async (req, res, next) => {
     try {
 
-        let data = await ExportsShipments.findOne(req.params.awbNo);
+        let data = await ExportsShipments.findOne(req.params.shipments_id);
         data.details = JSON.parse(data.details);
         res.send(data);
     }
@@ -129,3 +129,30 @@ export const getExportDetails = async (req, res, next) => {
         res.send(err);
     }
 }
+
+export const updateWeight = async (req, res, next) => {
+    console.log(req.body);
+    try {
+        let data = await ExportsShipments.updateWeight(req.body);
+        res.send(data);
+    }
+    catch (err) {
+        console.log(err);
+        res.send(err);
+    }
+}
+
+export const getShipmentDetails$Awb = async (req, res, next) => {
+    try {
+
+        let data = await ExportsShipments.findOne$Awb(req.params.AWB_no);
+        data.bill_details = JSON.parse(data.bill_details);
+        console.log(data)
+        res.send(data);
+    }
+    catch (err) {
+        console.log(err)
+        res.send(err);
+
+    }
+};
