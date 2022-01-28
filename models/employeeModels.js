@@ -2,25 +2,18 @@ import dbConnection from "../dbConn/dbConn.js";
 
 export default class Employees {
     constructor(data) {
-        this.name = data.name;
-        this.pEmail = data.pEmail;
-        this.pContact = data.pContact;
-        this.govId = data.govId;
-        this.pAddr = data.pAddr;
-        this.tAddr = data.tAddr;
-        this.depart = data.depart;
-        this.password = data.password;
-        this.employeeInfo = JSON.stringify(data.employeeInfo);
+        this.data = data;
+        this.data.employee_info = JSON.stringify(this.data.employee_info);
         /* this.image = data.profileImage;
         this.documents = JSON.stringify(data.documents); */
-        this.registeredBy = 'employee';
+        this.registered_by = 'employee';
     }
 
     save() {
         const saveData = new Promise((resolve, reject) => {
             const query = `INSERT INTO employee_details (name,primary_email,primary_contact,gov_id,permanent_address,temporary_address,department,password,employee_info,registered_by)
              VALUES (?)`;
-            const values = [[this.name, this.pEmail, this.pContact, this.govId, this.pAddr, this.tAddr, this.depart, this.password, this.employeeInfo, this.registeredBy]];
+            const values = [[this.data.name, this.data.primary_email, this.data.primary_contact, this.data.gov_id, this.data.permanent_address, this.data.temporary_address, this.data.department, this.data.password, this.data.employee_info, this.data.registered_by]];
 
             dbConnection.query(query, values, (err, result) => {
                 if (err) reject(err);
@@ -106,7 +99,7 @@ export default class Employees {
         data.employee_info = JSON.stringify(data.employee_info);
         const saveData = new Promise((resolve, reject) => {
             const query = `UPDATE employee_details SET name = ?,primary_email = ?,primary_contact = ?,gov_id = ?,permanent_address = ?,temporary_address = ?,department = ?,password = ?,employee_info = ? WHERE employee_id = ?`;
-            const values = [data.name, data.primary_email, data.primary_contact, data.govId, data.permanent_address, data.temporary_address, data.department, data.password, data.employeeInfo,];
+            const values = [data.name, data.primary_email, data.primary_contact, data.gov_id, data.permanent_address, data.temporary_address, data.department, data.password, data.employee_info, data.employee_id];
 
             dbConnection.query(query, values, (err, result) => {
                 if (err) reject(err);

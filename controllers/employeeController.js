@@ -14,9 +14,10 @@ export const getAllEmployeeDetails = async (req, res, next) => {
 
 export const getEmployeeDetails = async (req, res, next) => {
     try {
-        let data = await EmployeesModel.findOne(req.params.emailId);
-        console.log(data);
+        let data = await EmployeesModel.findOne(req.params.id);
+
         data.employee_info = JSON.parse(data.employee_info);
+        console.log(data);
         res.send(data);
     }
     catch (err) {
@@ -57,8 +58,6 @@ export const updateEmployeeDetails = async (req, res, next) => {
     try {
         const data = await EmployeesModel.updateEmployeeDetails(req.body);
         res.send(data);
-        console.log(req.body);
-        console.log(data);
 
     }
     catch (err) {

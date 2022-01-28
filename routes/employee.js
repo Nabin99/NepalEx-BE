@@ -8,7 +8,7 @@ employeeRoute.route('/')
     .post(addNewEmployeeDetails)
     .put(updateEmployeeDetails)
 
-employeeRoute.get('/emailid=:employee_id', getEmployeeDetails);
+employeeRoute.get('/emailid=:id', getEmployeeDetails);
 employeeRoute.get('/active_employees', getActiveEmployeeDetails)
 
 export default employeeRoute;
