@@ -16,7 +16,7 @@ export default class ImportsShipmentsModel {
     }
     save() {
         const saveData = new Promise((resolve, reject) => {
-            const query = `INSERT INTO imports_shipments_details (AWB_no, shipper, consignee, origin, service, service_provider,details, entry_by, is_billed)
+            const query = `INSERT INTO imports_shipments (AWB_no, shipper, consignee, origin, service, service_provider,details, entry_by, is_billed)
             VALUES (?)`;
             const values = [[this.awbNo, this.shipper, this.consignee, this.origin, this.service, this.serviceProvider, this.details, this.entryBy, this.isBilled]];
             dbConnection.query(query, values, (err, result) => {
@@ -31,7 +31,7 @@ export default class ImportsShipmentsModel {
     }
     static findAll() {
         const getAllData = new Promise((resolve, reject) => {
-            const query = `SELECT * FROM imports_shipments_details`;
+            const query = `SELECT * FROM imports_shipments`;
             dbConnection.query(query, (err, result) => {
                 if (err)
                     reject(err);
@@ -45,7 +45,7 @@ export default class ImportsShipmentsModel {
     }
     static findOne(key) {
         const getData = new Promise((resolve, reject) => {
-            const query = `SELECT * FROM imports_shipments_details WHERE shipments_id = ?`;
+            const query = `SELECT * FROM imports_shipments WHERE shipments_id = ?`;
             dbConnection.query(query, [key], (err, result) => {
                 if (err)
                     reject(err);
@@ -59,7 +59,7 @@ export default class ImportsShipmentsModel {
 
     static searchShipment(key) {
         const getData = new Promise((resolve, reject) => {
-            const query = `SELECT * FROM imports_shipments_details WHERE AWB_no = ?`;
+            const query = `SELECT * FROM imports_shipments WHERE AWB_no = ?`;
             dbConnection.query(query, [key], (err, result) => {
                 if (err)
                     reject(err);
@@ -72,7 +72,7 @@ export default class ImportsShipmentsModel {
     }
     static searchShipmentAmts(key) {
         const getData = new Promise((resolve, reject) => {
-            const query = `SELECT * FROM imports_shipments_details WHERE AWB_no = ?`;
+            const query = `SELECT * FROM imports_shipments WHERE AWB_no = ?`;
             dbConnection.query(query, [key], (err, result) => {
                 if (err)
                     reject(err);
@@ -88,7 +88,7 @@ export default class ImportsShipmentsModel {
         data.details = JSON.stringify(data.details);
 
         const saveData = new Promise((resolve, reject) => {
-            const query = `UPDATE imports_shipments_details SET AWB_no = ?, shipper = ?, consignee = ?, origin = ?, service = ?, service_provider = ?,details = ?,  is_billed = ?, bill_type = ? WHERE shipments_id = ?`;
+            const query = `UPDATE imports_shipments SET AWB_no = ?, shipper = ?, consignee = ?, origin = ?, service = ?, service_provider = ?,details = ?,  is_billed = ?, bill_type = ? WHERE shipments_id = ?`;
             const values = [data.AWB_no, data.shipper, data.consignee, data.origin, data.service, data.service_provider, data.details, data.is_billed, data.bill_type, data.shipments_id];
             dbConnection.query(query, values, (err, result) => {
                 if (err) reject(err);
@@ -105,7 +105,7 @@ export default class ImportsShipmentsModel {
         data.amounts_entered = 1;
 
         const saveData = new Promise((resolve, reject) => {
-            const query = `UPDATE imports_shipments_details SET bill_details = ?, bill_type = ?, amounts_entered = ? WHERE shipments_id= ?`;
+            const query = `UPDATE imports_shipments SET bill_details = ?, bill_type = ?, amounts_entered = ? WHERE shipments_id= ?`;
             const values = [data.bill_details, data.bill_type, data.amounts_entered, data.shipments_id];
             dbConnection.query(query, values, (err, result) => {
                 if (err) reject(err);
@@ -119,7 +119,7 @@ export default class ImportsShipmentsModel {
     }
     static findImportShipmentAmtsNull() {
         const getData = new Promise((resolve, reject) => {
-            const query = `SELECT * FROM imports_shipments_details WHERE amounts_entered = 0`;
+            const query = `SELECT * FROM imports_shipments WHERE amounts_entered = 0`;
             dbConnection.query(query, (err, result) => {
                 if (err)
                     reject(err);

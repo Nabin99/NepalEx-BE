@@ -10,7 +10,7 @@ class ExportsShipments {
 
     save() {
         const saveData = new Promise((resolve, reject) => {
-            const query = `INSERT INTO exports_shipments_details (AWB_no,status,shipper_id,consignee,destination,postal_code,remote_area,service,service_provider_id,shipment_type,details,entry_by,weight_verified,is_billed,custom_clearance)
+            const query = `INSERT INTO exports_shipments (AWB_no,status,shipper_id,consignee,destination,postal_code,remote_area,service,service_provider_id,shipment_type,details,entry_by,weight_verified,is_billed,custom_clearance)
              VALUES (?)`;
             const values = [[this.data.AWB_no, this.data.status, this.data.shipper_id, this.data.consignee, this.data.destination, this.data.postal_code, this.data.remote_area, this.data.service, this.data.service_provider_id, this.data.shipment_type, this.data.details, this.data.entry_by, this.data.weight_verified, this.data.is_billed, this.data.custom_clearance]];
 
@@ -26,7 +26,7 @@ class ExportsShipments {
     }
     static findAll() {
         const allData = new Promise((resolve, reject) => {
-            const query = `SELECT * FROM exports_shipments_details`;
+            const query = `SELECT * FROM exports_shipments`;
             dbConnection.query(query, (err, result) => {
                 if (err) reject(err);
                 else {
@@ -39,7 +39,7 @@ class ExportsShipments {
     }
     static findOne(key) {
         const Data = new Promise((resolve, reject) => {
-            const query = `SELECT * FROM exports_shipments_details WHERE shipments_id = ?`;
+            const query = `SELECT * FROM exports_shipments WHERE shipments_id = ?`;
             dbConnection.query(query, [key], (err, result) => {
                 if (err) reject(err);
                 else {
@@ -55,7 +55,7 @@ class ExportsShipments {
     }
     static findOne$Awb(key) {
         const Data = new Promise((resolve, reject) => {
-            const query = `SELECT * FROM exports_shipments_details WHERE AWB_no = ?`;
+            const query = `SELECT * FROM exports_shipments WHERE AWB_no = ?`;
             dbConnection.query(query, [key], (err, result) => {
                 if (err) reject(err);
                 else {
@@ -71,7 +71,7 @@ class ExportsShipments {
     }
     static activeShipments() {
         const Data = new Promise((resolve, reject) => {
-            const query = `SELECT exports_shipments_details.shipments_id,exports_shipments_details.AWB_no,exports_shipments_details.status,client_details.primary_email,exports_shipments_details.consignee,exports_shipments_details.destination,exports_shipments_details.remote_area,exports_shipments_details.service,exports_shipments_details.service_provider_id,exports_shipments_details.shipment_type,exports_shipments_details.entry_date,exports_shipments_details.weight_verified,exports_shipments_details.is_billed FROM ((exports_shipments_details INNER JOIN client_details ON exports_shipments_details.shipper_id= client_details.client_id)) WHERE exports_shipments_details.status != "Delivered" and exports_shipments_details.status != "Returned"`;
+            const query = `SELECT exports_shipments.shipments_id,exports_shipments.AWB_no,exports_shipments.status,clients.primary_email,exports_shipments.consignee,exports_shipments.destination,exports_shipments.remote_area,exports_shipments.service,exports_shipments.service_provider_id,exports_shipments.shipment_type,exports_shipments.entry_date,exports_shipments.weight_verified,exports_shipments.is_billed FROM ((exports_shipments INNER JOIN clients ON exports_shipments.shipper_id= clients.client_id)) WHERE exports_shipments.status != "Delivered" and exports_shipments.status != "Returned"`;
 
             dbConnection.query(query, (err, result) => {
                 if (err) reject(err);
@@ -87,7 +87,7 @@ class ExportsShipments {
 
     static updateStatus(data) {
         const Data = new Promise((resolve, reject) => {
-            const query = `UPDATE exports_shipments_details SET status = ?,comment = ? WHERE AWB_no = ?`;
+            const query = `UPDATE exports_shipments SET status = ?,comment = ? WHERE AWB_no = ?`;
             const values = [data.status, data.comment, data.AWB_no];
             dbConnection.query(query, values, (err, result) => {
                 if (err) reject(err);
@@ -104,7 +104,7 @@ class ExportsShipments {
 
     static searchShipments(data) {
         const Data = new Promise((resolve, reject) => {
-            const query = `SELECT * FROM exports_shipments_details WHERE AWB_no = ? OR shipper_id = ?`;
+            const query = `SELECT * FROM exports_shipments WHERE AWB_no = ? OR shipper_id = ?`;
             const values = [data.AWB_no, data.shipper_id];
             dbConnection.query(query, values, (err, result) => {
                 if (err) reject(err);
@@ -121,7 +121,7 @@ class ExportsShipments {
     static modifyDetails(data) {
         data.details = JSON.stringify(data.details);
         const Data = new Promise((resolve, reject) => {
-            const query = `UPDATE exports_shipments_details SET AWB_no= ?,status= ?,shipper_id= ?,consignee= ?,destination= ?,postal_code= ?,remote_area= ?,service= ?,service_provider_id= ?,shipment_type= ?,details= ?,weight_verified= ?,is_billed=? WHERE shipments_id= ?`;
+            const query = `UPDATE exports_shipments SET AWB_no= ?,status= ?,shipper_id= ?,consignee= ?,destination= ?,postal_code= ?,remote_area= ?,service= ?,service_provider_id= ?,shipment_type= ?,details= ?,weight_verified= ?,is_billed=? WHERE shipments_id= ?`;
             const values = [data.AWB_no, data.status, data.shipper_id, data.consignee, data.destination, data.postal_code, data.remote_area, data.service, data.service_provider_id, data.shipment_type, data.details, data.weight_verified, data.is_billed, data.shipments_id];
             dbConnection.query(query, values, (err, result) => {
                 if (err) reject(err);
@@ -140,7 +140,7 @@ class ExportsShipments {
         data.amounts_entered = 1;
 
         const saveData = new Promise((resolve, reject) => {
-            const query = `UPDATE exports_shipments_details SET bill_details = ?, bill_type = ?, amounts_entered = ? WHERE shipments_id= ?`;
+            const query = `UPDATE exports_shipments SET bill_details = ?, bill_type = ?, amounts_entered = ? WHERE shipments_id= ?`;
             const values = [data.bill_details, data.bill_type, data.amounts_entered, data.shipments_id];
             dbConnection.query(query, values, (err, result) => {
                 if (err) reject(err);
@@ -154,7 +154,7 @@ class ExportsShipments {
     }
     static findExportShipmentAmtsNull() {
         const getData = new Promise((resolve, reject) => {
-            const query = `SELECT * FROM exports_shipments_details WHERE amounts_entered = 0`;
+            const query = `SELECT * FROM exports_shipments WHERE amounts_entered = 0`;
             dbConnection.query(query, (err, result) => {
                 if (err)
                     reject(err);
@@ -167,7 +167,7 @@ class ExportsShipments {
     }
     static findExportShipmentUnverified() {
         const getData = new Promise((resolve, reject) => {
-            const query = `SELECT * FROM exports_shipments_details WHERE weight_verified = 0`;
+            const query = `SELECT * FROM exports_shipments WHERE weight_verified = 0`;
             dbConnection.query(query, (err, result) => {
                 if (err)
                     reject(err);
@@ -181,7 +181,7 @@ class ExportsShipments {
 
     static getExportDetails(key) {
         const Data = new Promise((resolve, reject) => {
-            const query = `SELECT details FROM exports_shipments_details WHERE shipments_id = ?`;
+            const query = `SELECT details FROM exports_shipments WHERE shipments_id = ?`;
             dbConnection.query(query, [key], (err, result) => {
                 if (err) reject(err);
                 else {
@@ -200,7 +200,7 @@ class ExportsShipments {
         data.details = JSON.stringify(data.details);
         data.weight_verified = 1;
         const Data = new Promise((resolve, reject) => {
-            const query = `UPDATE exports_shipments_details SET details= ? ,bill_type =?, weight_verified = ? WHERE shipments_id= ?`;
+            const query = `UPDATE exports_shipments SET details= ? ,bill_type =?, weight_verified = ? WHERE shipments_id= ?`;
             const values = [data.details, data.bill_type, data.weight_verified, data.shipments_id];
             dbConnection.query(query, values, (err, result) => {
                 if (err) reject(err);

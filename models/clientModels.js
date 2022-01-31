@@ -12,7 +12,7 @@ class Client {
 
     save() {
         const saveData = new Promise((resolve, reject) => {
-            const query = `INSERT INTO client_details (account_type,name,primary_email,primary_contact,govId,address,password,registered_by,client_info)
+            const query = `INSERT INTO clients (account_type,name,primary_email,primary_contact,govId,address,password,registered_by,client_info)
              VALUES (?)`;
             const values = [[this.data.account_type, this.data.name, this.data.primary_email, this.data.primary_contact, this.data.govId, this.data.address, this.data.password, this.data.registered_by, this.data.client_info]];
 
@@ -28,7 +28,7 @@ class Client {
     }
     static findAll() {
         const allData = new Promise((resolve, reject) => {
-            const query = `SELECT * FROM client_details`;
+            const query = `SELECT * FROM clients`;
             dbConnection.query(query, (err, result) => {
                 if (err) reject(err);
                 else {
@@ -41,7 +41,7 @@ class Client {
     }
     static findOne(key) {
         const Data = new Promise((resolve, reject) => {
-            const query = `SELECT * FROM client_details WHERE primary_email = ?`;
+            const query = `SELECT * FROM clients WHERE primary_email = ?`;
             dbConnection.query(query, [key], (err, result) => {
                 if (err) reject(err);
                 else {

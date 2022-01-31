@@ -11,7 +11,7 @@ export default class ServiceProviderModel {
     }
     save() {
         const saveData = new Promise((resolve, reject) => {
-            const query = `INSERT INTO service_provider (name,entries)
+            const query = `INSERT INTO service_providers (name,entries)
             VALUES (?)`;
             const values = [[this.name, this.entries]];
             dbConnection.query(query, values, (err, result) => {
@@ -24,7 +24,7 @@ export default class ServiceProviderModel {
     }
     static findAll() {
         const getAllData = new Promise((resolve, reject) => {
-            const query = `SELECT * FROM service_provider`;
+            const query = `SELECT * FROM service_providers`;
             dbConnection.query(query, (err, result) => {
                 if (err) reject(err);
                 else
@@ -35,7 +35,7 @@ export default class ServiceProviderModel {
     }
     static findOne(key) {
         const getData = new Promise((resolve, reject) => {
-            const query = `SELECT * FROM service_provider WHERE name = ?`;
+            const query = `SELECT * FROM service_providers WHERE name = ?`;
             dbConnection.query(query, [key], (err, result) => {
                 if (err) reject(err);
                 else
