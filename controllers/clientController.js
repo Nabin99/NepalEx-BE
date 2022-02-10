@@ -23,16 +23,28 @@ export const getClientDetails = async (req, res, next) => {
 };
 
 export const addNewClientDetails = async (req, res, next) => {
-    console.log(req.body)
     const client = new ClientModel(req.body);
-
-
     try {
-        data = await client.save()
-        res.send(data);
+        const data = await client.save()
+        res.status(202).send({ message: "Data Received" });
+    }
+    catch (err) {
+        console.log(err);
+        res.status(406).send({ message: { ...err } });
+
+    }
+}
+export const searchClients = async (req, res, next) => {
+    try {
+        const data = await ClientModel.searchClients(req.query.s);
+        if (data.length == 0)
+            res.status(404).send({ message: "No Data Found!!!" });
+        else
+            res.send([...data]);
 
     }
     catch (err) {
-        res.send(err);
+        console.log(err);
+        res.status(400).send({ message: "An Error Occurred!!!", ...err })
     }
 }

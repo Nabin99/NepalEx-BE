@@ -1,3 +1,4 @@
+
 import ExportsShipments from '../models/exportsShipmentsModels.js';
 
 export const getAllShipmentsDetails = async (req, res, next) => {
@@ -13,8 +14,33 @@ export const getAllShipmentsDetails = async (req, res, next) => {
 export const getShipmentDetails = async (req, res, next) => {
     try {
 
-        let data = await ExportsShipments.findOne(req.params.shipments_id);
-        data.details = JSON.parse(data.details);
+        let data = await ExportsShipments.getShipmentDetail(req.params.AWB_no);
+        if (data.length == 0)
+            res.status(404).send({ message: `Shipment With AWB No.${req.params.AWB_no} Not Found!!!` });
+        else {
+            data[0].details = JSON.parse(data[0].details);
+            res.send(data[0]);
+        }
+    }
+    catch (err) {
+        console.log(err)
+        res.status(400).send({ message: "An Error Occured!!!", ...err });
+    }
+};
+export const modifyDetails = async (req, res, next) => {
+    try {
+        await ExportsShipments.modifyDetails(req.body);
+        res.send({ message: "Successfully Updated Shipment With id: " + req.body.shipments_id });
+    }
+    catch (err) {
+        console.log(err);
+        res.status(400).send({ message: "An Error Occurred!!!", ...err });
+    }
+};
+
+export const getShipmentStatus = async (req, res, next) => {
+    try {
+        let data = await ExportsShipments.getShipmentStatus(req.params.AWB_no);
         res.send(data);
     }
     catch (err) {
@@ -28,28 +54,45 @@ export const addNewShipmentDetails = async (req, res, next) => {
     const shimpentDetails = new ExportsShipments(req.body);
 
     try {
-        let data = await shimpentDetails.save()
-        res.send(data);
-
+        await shimpentDetails.save()
+        res.status(201).send({ message: "Successfully Added Shipment With AWB No.: " + req.body.AWB_no });
 
     }
     catch (err) {
-        console.log(err);
-        res.send(err);
+        res.status(400).send({ message: "An Error Occured!!!", ...err });
 
     }
 }
+
+export const getShipment = async (req, res, next) => {
+    try {
+
+        let data = await ExportsShipments.findOne(req.params.AWB_no);
+        if (data.length == 0)
+            res.status(404).send({ message: "Shipment Not Found!!!" });
+        else {
+            data[0].details = JSON.parse(data[0].details);
+            data[0].bill_details = JSON.parse(data[0].bill_details);
+            res.send(data[0]);
+        }
+    }
+    catch (err) {
+        res.status(400).send({ message: "An Error Occured!!!", ...err });
+    }
+};
 
 export const getActiveStatusShipments = async (req, res, next) => {
 
     try {
         let data = await ExportsShipments.activeShipments();
-        res.send(data);
+        if (data.length == 0)
+            res.status(404).send({ message: "No Active Shipments Found!!!" });
+        else
+            res.send(data);
 
     }
     catch (err) {
-        console.log(err);
-        res.send(err);
+        res.status(400).send({ message: "An Error Occuured!!!", ...err });
 
     }
 }
@@ -57,13 +100,14 @@ export const updateShipmentsStatus = async (req, res, next) => {
 
     try {
         let data = await ExportsShipments.updateStatus(req.body);
-        res.send(data);
+        res.status(202).send({ message: "Successfully Updated Shipment with id " + req.body.shipments_id });
     }
     catch (err) {
         console.log(err);
-        res.send(err);
+        res.status(400).send({ message: "An Error Occured!!!", ...err });
     }
 }
+
 export const searchShipments = async (req, res, next) => {
 
     try {
@@ -76,17 +120,7 @@ export const searchShipments = async (req, res, next) => {
     }
 }
 
-export const modifyDetails = async (req, res, next) => {
-    console.log(req.body);
-    try {
-        let data = await ExportsShipments.modifyDetails(req.body);
-        res.send(data);
-    }
-    catch (err) {
-        console.log(err);
-        res.send(err);
-    }
-}
+
 
 export const modifyExportShipmentAmts = async (req, res, next) => {
     try {
@@ -142,17 +176,3 @@ export const updateWeight = async (req, res, next) => {
     }
 }
 
-export const getShipmentDetails$Awb = async (req, res, next) => {
-    try {
-
-        let data = await ExportsShipments.findOne$Awb(req.params.AWB_no);
-        data.bill_details = JSON.parse(data.bill_details);
-        console.log(data)
-        res.send(data);
-    }
-    catch (err) {
-        console.log(err)
-        res.send(err);
-
-    }
-};

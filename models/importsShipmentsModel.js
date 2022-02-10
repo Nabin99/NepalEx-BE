@@ -2,23 +2,18 @@ import dbConnection from "../dbConn/dbConn.js";
 
 export default class ImportsShipmentsModel {
     constructor(data) {
-        this.awbNo = data.awbNo;
-        this.shipper = data.shipper;
-        this.consignee = data.consignee;
-        this.origin = data.origin;
-        this.service = data.service;
-        this.serviceProvider = data.serviceProvider;
+        this.data = data;
         // this.documents = data.documents;
-        this.details = JSON.stringify(data.details);
-        this.entryBy = 1;
-        this.isBilled = false;
+        this.data.details = JSON.stringify(this.data.details);
+        this.data.entry_by = 1;
+        this.data.is_billed = false;
 
     }
     save() {
         const saveData = new Promise((resolve, reject) => {
-            const query = `INSERT INTO imports_shipments (AWB_no, shipper, consignee, origin, service, service_provider,details, entry_by, is_billed)
+            const query = `INSERT INTO imports_shipments (AWB_no, shipper_id, consignee, origin, service, service_provider_id,details, entry_by, is_billed)
             VALUES (?)`;
-            const values = [[this.awbNo, this.shipper, this.consignee, this.origin, this.service, this.serviceProvider, this.details, this.entryBy, this.isBilled]];
+            const values = [[this.data.AWB_no, this.data.shipper_id, this.data.consignee, this.data.origin, this.data.service, this.data.service_provider_id, this.data.details, this.data.entry_by, this.data.is_billed]];
             dbConnection.query(query, values, (err, result) => {
                 if (err) reject(err);
                 else
@@ -43,18 +38,34 @@ export default class ImportsShipmentsModel {
         return getAllData;
 
     }
-    static findOne(key) {
+    static getDetails(key) {
         const getData = new Promise((resolve, reject) => {
-            const query = `SELECT * FROM imports_shipments WHERE shipments_id = ?`;
+            const query = `SELECT imports_shipments.shipments_id,imports_shipments.AWB_no,clients.name As shipper,client_id AS shipper_id,primary_email AS email_id,imports_shipments.consignee,imports_shipments.origin,imports_shipments.service,service_providers.id AS service_provider_id,imports_shipments.documents,imports_shipments.details FROM ((imports_shipments INNER JOIN clients ON clients.client_id = imports_shipments.shipper_id) INNER JOIN service_providers ON service_providers.id = imports_shipments.service_provider_id) WHERE AWB_no = ?`;
             dbConnection.query(query, [key], (err, result) => {
                 if (err)
                     reject(err);
                 else
-                    resolve(result[0]);
+                    resolve(result);
             });
 
         });
         return getData;
+    }
+    static modifyShipmentDetails(data) {
+        data.details = JSON.stringify(data.details);
+
+        const saveData = new Promise((resolve, reject) => {
+            const query = `UPDATE imports_shipments SET AWB_no = ?, shipper_id = ?, consignee = ?, origin = ?, service = ?, service_provider_id = ?,details = ? WHERE shipments_id = ?`;
+            const values = [data.AWB_no, data.shipper_id, data.consignee, data.origin, data.service, data.service_provider_id, data.details, data.shipments_id];
+            dbConnection.query(query, values, (err, result) => {
+                if (err) reject(err);
+                else
+                    resolve(result);
+            });
+        });
+
+        return saveData;
+
     }
 
     static searchShipment(key) {
@@ -84,22 +95,7 @@ export default class ImportsShipmentsModel {
         return getData;
     }
 
-    static modifyShipment(data) {
-        data.details = JSON.stringify(data.details);
 
-        const saveData = new Promise((resolve, reject) => {
-            const query = `UPDATE imports_shipments SET AWB_no = ?, shipper = ?, consignee = ?, origin = ?, service = ?, service_provider = ?,details = ?,  is_billed = ?, bill_type = ? WHERE shipments_id = ?`;
-            const values = [data.AWB_no, data.shipper, data.consignee, data.origin, data.service, data.service_provider, data.details, data.is_billed, data.bill_type, data.shipments_id];
-            dbConnection.query(query, values, (err, result) => {
-                if (err) reject(err);
-                else
-                    resolve(result);
-            });
-        });
-
-        return saveData;
-
-    }
     static modifyImportShipmentAmts(data) {
         data.bill_details = JSON.stringify(data.bill_details);
         data.amounts_entered = 1;

@@ -3,18 +3,19 @@ import { generateAccessToken, generateRefreshToken } from "../authentication/acc
 
 export const EmployeeCredentials = async (req, res, next) => {
     try {
-        const data = await Employees.findOne(req.body.email, req.body.password);
-        if (data == undefined) {
-            res.sendStatus(406);
+        const data = await Employees.searchEmployee(req.body.email, req.body.password);
+        if (data.length === 0) {
+            res.status(404).send({ message: "User With Given Email And Password Not Found!!!" });
         }
         else {
-            const accessToken = generateAccessToken({ ...data, headers: req.headers });
-            const refreshToken = generateRefreshToken({ ...data, headers: req.headers });
-            res.send({ ...data, accessToken: accessToken, refreshToken: refreshToken });
+            const accessToken = generateAccessToken({ ...data[0], headers: req.headers });
+            const refreshToken = generateRefreshToken({ ...data[0], headers: req.headers });
+            res.send({ ...data[0], accessToken: accessToken, refreshToken: refreshToken });
         }
 
     }
     catch (err) {
-        res.send(err);
+        console.log(err)
+        res.status(400).send({ message: "An Error Occured!!!", ...err });
     }
 }

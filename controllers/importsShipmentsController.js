@@ -4,12 +4,12 @@ export const addNewImport = async (req, res, next) => {
     try {
         const newImport = new ImportsShipmentsModel(req.body);
         console.log(req.body);
-        res.send(await newImport.save());
+        await newImport.save()
+        res.status(201).send({ message: "Successfully Added New Shipment" });
     }
     catch (err) {
         console.log(err);
-        res.send(err);
-
+        res.status(400).send({ message: "An Error Occurred!!!", ...err });
     }
 }
 
@@ -22,14 +22,19 @@ export const getAllImports = async (req, res, next) => {
     }
 }
 
-export const getImport = async (req, res, next) => {
+export const getShipmentDetails = async (req, res, next) => {
     try {
-        const data = await ImportsShipmentsModel.findOne(req.params.shipment_id);
-        data.details = JSON.parse(data.details);
-        res.send();
+        const data = await ImportsShipmentsModel.getDetails(req.params.AWB_no);
+        if (data.length == 0)
+            res.status(404).send({ message: `Shipment With AWB No.${req.params.AWB_no} Not Found!!!` });
+        else {
+            data[0].details = JSON.parse(data[0].details);
+            res.send(data[0]);
+        }
     }
     catch (err) {
-        res.send(err);
+        console.log(err);
+        res.status(400).send({ message: "An Error Occurred!!!", ...err });
     }
 }
 
@@ -58,13 +63,14 @@ export const searchImportShipmentAmts = async (req, res, next) => {
     }
 }
 
-export const modifyImportShipment = async (req, res, next) => {
+export const modifyImportShipmentDetails = async (req, res, next) => {
     try {
-        const data = await ImportsShipmentsModel.modifyShipment(req.body);
-        res.send(data);
+        await ImportsShipmentsModel.modifyShipmentDetails(req.body);
+        res.send({ message: "Successfully Updated Shipment With id: " + req.body.shipments_id });
     }
     catch (err) {
-        res.send(err);
+        console.log(err)
+        res.status(400).send({ message: "An Error Occurred!!!", ...err });
     }
 }
 

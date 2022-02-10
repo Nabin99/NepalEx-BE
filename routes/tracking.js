@@ -1,11 +1,8 @@
 import express from 'express';
-import authorizeAccess from '../authorization/authorizationPolicy.js';
+import { getShipmentStatus } from '../controllers/exportsShipmentsController.js';
 
 const router = express.Router();
 
-router.get('/', authorizeAccess, (req, res) => {
-    console.log(req.headers)
-    res.send('This is the tracking route');
-});
+router.get('/id=:AWB_no', getShipmentStatus);
 
 export default router;

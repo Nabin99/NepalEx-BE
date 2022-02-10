@@ -49,8 +49,7 @@ export default class Employees {
             dbConnection.query(query, [email, password], (err, result) => {
                 if (err) reject(err);
                 else {
-
-                    resolve(result[0]);
+                    resolve(result);
                 }
 
 

@@ -12,14 +12,14 @@ class Client {
 
     save() {
         const saveData = new Promise((resolve, reject) => {
-            const query = `INSERT INTO clients (account_type,name,primary_email,primary_contact,govId,address,password,registered_by,client_info)
+            const query = `INSERT INTO clients (account_type,name,primary_email,primary_contact,gov_id,address,password,registered_by,client_info)
              VALUES (?)`;
-            const values = [[this.data.account_type, this.data.name, this.data.primary_email, this.data.primary_contact, this.data.govId, this.data.address, this.data.password, this.data.registered_by, this.data.client_info]];
+            const values = [[this.data.account_type, this.data.name, this.data.primary_email, this.data.primary_contact, this.data.gov_id, this.data.address, this.data.password, this.data.registered_by, this.data.client_info]];
 
             dbConnection.query(query, values, (err, result) => {
                 if (err) reject(err);
                 else
-                    resolve(result[0]);
+                    resolve(result);
             });
         });
 
@@ -55,6 +55,22 @@ class Client {
         });
 
         return Data;
+    }
+
+    static searchClients(data) {
+        const allData = new Promise((resolve, reject) => {
+            if (data.trim() != "") {
+                const query = `SELECT client_id,name,primary_email FROM clients WHERE  name LIKE ? `;
+                dbConnection.query(query, [`%${data}%`], (err, result) => {
+                    if (err) reject(err);
+                    else {
+                        resolve(result);
+                    }
+                });
+            }
+        });
+
+        return allData;
     }
 
 }

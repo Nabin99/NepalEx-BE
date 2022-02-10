@@ -24,7 +24,7 @@ export default class ServiceProviderModel {
     }
     static findAll() {
         const getAllData = new Promise((resolve, reject) => {
-            const query = `SELECT * FROM service_providers`;
+            const query = `SELECT id,name FROM service_providers`;
             dbConnection.query(query, (err, result) => {
                 if (err) reject(err);
                 else
