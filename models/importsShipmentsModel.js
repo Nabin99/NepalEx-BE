@@ -40,7 +40,7 @@ export default class ImportsShipmentsModel {
     }
     static getDetails(key) {
         const getData = new Promise((resolve, reject) => {
-            const query = `SELECT imports_shipments.shipments_id,imports_shipments.AWB_no,clients.name As shipper,client_id AS shipper_id,primary_email AS email_id,imports_shipments.consignee,imports_shipments.origin,imports_shipments.service,service_providers.id AS service_provider_id,imports_shipments.documents,imports_shipments.details FROM ((imports_shipments INNER JOIN clients ON clients.client_id = imports_shipments.shipper_id) INNER JOIN service_providers ON service_providers.id = imports_shipments.service_provider_id) WHERE AWB_no = ?`;
+            const query = `SELECT imports_shipments.shipments_id,imports_shipments.AWB_no,clients.name As shipper,client_id AS shipper_id,primary_email AS email_id,imports_shipments.consignee,imports_shipments.origin,imports_shipments.service,service_provider_id,imports_shipments.documents,imports_shipments.details FROM imports_shipments INNER JOIN clients ON clients.client_id = imports_shipments.shipper_id WHERE AWB_no = ?`;
             dbConnection.query(query, [key], (err, result) => {
                 if (err)
                     reject(err);

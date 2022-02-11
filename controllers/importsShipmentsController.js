@@ -3,7 +3,7 @@ import ImportsShipmentsModel from "../models/importsShipmentsModel.js";
 export const addNewImport = async (req, res, next) => {
     try {
         const newImport = new ImportsShipmentsModel(req.body);
-        console.log(req.body);
+
         await newImport.save()
         res.status(201).send({ message: "Successfully Added New Shipment" });
     }

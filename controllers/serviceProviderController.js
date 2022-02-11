@@ -24,7 +24,6 @@ export const getAllServiceProvider = async (req, res, next) => {
             res.status(404).send({ message: "No Service Providers Found!!!" });
         else
             res.send(data);
-        console.log([...data]);
     }
     catch (err) {
         console.log(err);

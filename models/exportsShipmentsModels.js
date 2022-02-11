@@ -39,7 +39,7 @@ class ExportsShipments {
     }
     static getShipmentDetail(key) {
         const Data = new Promise((resolve, reject) => {
-            const query = `SELECT AWB_no,status,clients.name AS shipper ,client_id, primary_email AS email_id,consignee,destination,postal_code,remote_area,service,service_provider_id,shipment_type,details,weight_verified,is_billed FROM exports_shipments INNER JOIN clients ON clients.client_id = exports_shipments.shipper_id WHERE AWB_no = ?`;
+            const query = `SELECT shipments_id,AWB_no,status,comment,clients.name AS shipper ,client_id AS shipper_id, primary_email AS email_id,consignee,destination,postal_code,remote_area,service,service_provider_id,shipment_type,details,custom_clearance FROM exports_shipments INNER JOIN clients ON clients.client_id = exports_shipments.shipper_id WHERE AWB_no = ?`;
             dbConnection.query(query, [key], (err, result) => {
                 if (err) reject(err);
                 else {
@@ -56,8 +56,8 @@ class ExportsShipments {
     static modifyDetails(data) {
         data.details = JSON.stringify(data.details);
         const Data = new Promise((resolve, reject) => {
-            const query = `UPDATE exports_shipments SET AWB_no= ?,status= ?,shipper_id= ?,consignee= ?,destination= ?,postal_code= ?,remote_area= ?,service= ?,service_provider_id= ?,shipment_type= ?,details= ?,weight_verified= ?,is_billed=? WHERE shipments_id= ?`;
-            const values = [data.AWB_no, data.status, data.shipper_id, data.consignee, data.destination, data.postal_code, data.remote_area, data.service, data.service_provider_id, data.shipment_type, data.details, data.weight_verified, data.is_billed, data.shipments_id];
+            const query = `UPDATE exports_shipments SET AWB_no= ?,status= ?, comment = ?, shipper_id= ?,consignee= ?,destination= ?,postal_code= ?,remote_area= ?,service= ?,service_provider_id= ?,shipment_type= ?,details= ?, custom_clearance = ? WHERE shipments_id= ?`;
+            const values = [data.AWB_no, data.status, data.comment, data.shipper_id, data.consignee, data.destination, data.postal_code, data.remote_area, data.service, data.service_provider_id, data.shipment_type, data.details, data.custom_clearance, data.shipments_id];
             dbConnection.query(query, values, (err, result) => {
                 if (err) reject(err);
                 else {
@@ -72,7 +72,7 @@ class ExportsShipments {
 
     static findOne(key) {
         const Data = new Promise((resolve, reject) => {
-            const query = `SELECT exports_shipments.AWB_no,exports_shipments.status,clients.name AS shipper,clients.primary_email AS shipper_id,exports_shipments.consignee,exports_shipments.destination,exports_shipments.remote_area,exports_shipments.service,service_providers.name AS service_provider,exports_shipments.shipment_type,exports_shipments.entry_date,exports_shipments.weight_verified,exports_shipments.is_billed, exports_shipments.details,exports_shipments.bill_no,exports_shipments.bill_type,exports_shipments.bill_details FROM ((exports_shipments INNER JOIN clients ON exports_shipments.shipper_id= clients.client_id)INNER JOIN service_providers ON exports_shipments.service_provider_id= service_providers.id) WHERE AWB_no = ?`;
+            const query = `SELECT exports_shipments.AWB_no,exports_shipments.status,clients.name AS shipper,clients.primary_email AS shipper_id,exports_shipments.consignee,exports_shipments.destination,exports_shipments.remote_area,exports_shipments.service,service_providers.name AS service_provider,exports_shipments.shipment_type,exports_shipments.entry_date,exports_shipments.weight_verified,exports_shipments.is_billed, exports_shipments.details,exports_shipments.bill_no,exports_shipments.bill_type,exports_shipments.bill_details,custom_clearance FROM ((exports_shipments INNER JOIN clients ON exports_shipments.shipper_id= clients.client_id)INNER JOIN service_providers ON exports_shipments.service_provider_id= service_providers.id) WHERE AWB_no = ?`;
             dbConnection.query(query, [key], (err, result) => {
                 if (err) reject(err);
                 else {
