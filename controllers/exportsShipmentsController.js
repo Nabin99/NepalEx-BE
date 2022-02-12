@@ -99,7 +99,7 @@ export const getActiveStatusShipments = async (req, res, next) => {
 export const updateShipmentsStatus = async (req, res, next) => {
 
     try {
-        let data = await ExportsShipments.updateStatus(req.body);
+        await ExportsShipments.updateStatus(req.body);
         res.status(202).send({ message: "Successfully Updated Shipment with id " + req.body.shipments_id });
     }
     catch (err) {
@@ -108,38 +108,30 @@ export const updateShipmentsStatus = async (req, res, next) => {
     }
 }
 
-export const searchShipments = async (req, res, next) => {
-
-    try {
-        let data = await ExportsShipments.searchShipments(req.query);
-        res.send(data);
-    }
-    catch (err) {
-        console.log(err);
-        res.send(err);
-    }
-}
-
 
 
 export const modifyExportShipmentAmts = async (req, res, next) => {
     try {
-        const data = await ExportsShipments.modifyExportShipmentAmts(req.body);
-        res.send(data);
+        await ExportsShipments.modifyExportShipmentAmts(req.body);
+        res.send({ message: "Successfully Updated Shipment with id " + req.body.shipments_id });
     }
     catch (err) {
-        res.send(err);
+        console.log(err);
+        res.status(400).send({ message: "An Error Occured!!!", ...err });
     }
 }
 
 export const getExportShipmentAmtsNull = async (req, res, next) => {
     try {
         const data = await ExportsShipments.findExportShipmentAmtsNull();
-        res.send(data);
+        if (data.length == 0)
+            res.status(404).send({ message: "No Shipments With Empty Amounts Details Found!!!" });
+        else
+            res.send(data);
     }
     catch (err) {
         console.log(err)
-        res.send(err);
+        res.status(400).send({ message: "An Error Occured!!!", ...err });
     }
 }
 export const getExportShipmentUnverified = async (req, res, next) => {
@@ -152,15 +144,19 @@ export const getExportShipmentUnverified = async (req, res, next) => {
         res.send(err);
     }
 }
-export const getExportDetails = async (req, res, next) => {
+export const getExportAmtsDetails = async (req, res, next) => {
     try {
-        const data = await ExportsShipments.getExportDetails(req.params.shipments_id);
-        data.details = JSON.parse(data.details);
-        res.send(data);
+        const data = await ExportsShipments.getExportAmtsDetails(req.params.AWB_no);
+        if (data.length == 0)
+            res.status(404).send({ message: "Shipment With ID " + req.params.AWB_no + " Not Found or Unavailable For Modification!!!" })
+        else {
+            data[0].bill_details = JSON.parse(data[0].bill_details);
+            res.send(data[0]);
+        }
     }
     catch (err) {
         console.log(err)
-        res.send(err);
+        res.status(400).send({ message: "An Error Occured!!!", ...err });
     }
 }
 

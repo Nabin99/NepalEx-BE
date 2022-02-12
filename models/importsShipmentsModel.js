@@ -83,12 +83,12 @@ export default class ImportsShipmentsModel {
     }
     static searchShipmentAmts(key) {
         const getData = new Promise((resolve, reject) => {
-            const query = `SELECT * FROM imports_shipments WHERE AWB_no = ?`;
+            const query = `SELECT imports_shipments.shipments_id,imports_shipments.AWB_no,clients.name As shipper,client_id AS shipper_id,primary_email AS email_id,imports_shipments.consignee,imports_shipments.origin,imports_shipments.service,service_provider_id,bill_details,is_billed,bill_type,entry_date FROM imports_shipments INNER JOIN clients ON clients.client_id = imports_shipments.shipper_id WHERE AWB_no = ? AND amounts_entered = 1`;
             dbConnection.query(query, [key], (err, result) => {
                 if (err)
                     reject(err);
                 else
-                    resolve(result[0]);
+                    resolve(result);
             });
 
         });
@@ -115,7 +115,7 @@ export default class ImportsShipmentsModel {
     }
     static findImportShipmentAmtsNull() {
         const getData = new Promise((resolve, reject) => {
-            const query = `SELECT * FROM imports_shipments WHERE amounts_entered = 0`;
+            const query = `SELECT imports_shipments.shipments_id,imports_shipments.AWB_no,clients.name As shipper,primary_email AS email_id,imports_shipments.consignee,imports_shipments.origin,imports_shipments.service,service_provider_id,is_billed,bill_type,entry_date FROM imports_shipments INNER JOIN clients ON clients.client_id = imports_shipments.shipper_id WHERE amounts_entered = 0`;
             dbConnection.query(query, (err, result) => {
                 if (err)
                     reject(err);

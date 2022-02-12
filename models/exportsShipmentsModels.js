@@ -119,23 +119,6 @@ class ExportsShipments {
         return Data;
     }
 
-    static searchShipments(data) {
-        const Data = new Promise((resolve, reject) => {
-            const query = `SELECT * FROM exports_shipments WHERE AWB_no = ? OR shipper_id = ?`;
-            const values = [data.AWB_no, data.shipper_id];
-            dbConnection.query(query, values, (err, result) => {
-                if (err) reject(err);
-                else {
-                    resolve(result);
-                }
-            });
-
-        });
-
-        return Data;
-    }
-
-
 
     static modifyExportShipmentAmts(data) {
         data.bill_details = JSON.stringify(data.bill_details);
@@ -154,9 +137,11 @@ class ExportsShipments {
         return saveData;
 
     }
+
     static findExportShipmentAmtsNull() {
         const getData = new Promise((resolve, reject) => {
-            const query = `SELECT * FROM exports_shipments WHERE amounts_entered = 0`;
+            const query = `SELECT exports_shipments.shipments_id,exports_shipments.AWB_no,exports_shipments.status,clients.name AS shipper,clients.primary_email AS email_id,exports_shipments.consignee,exports_shipments.destination,exports_shipments.remote_area,exports_shipments.service, service_provider_id,exports_shipments.shipment_type,exports_shipments.entry_date,exports_shipments.weight_verified,exports_shipments.is_billed,exports_shipments.bill_type,custom_clearance FROM exports_shipments INNER JOIN clients ON exports_shipments.shipper_id= clients.client_id WHERE amounts_entered = 0`;
+
             dbConnection.query(query, (err, result) => {
                 if (err)
                     reject(err);
@@ -167,6 +152,7 @@ class ExportsShipments {
         });
         return getData;
     }
+
     static findExportShipmentUnverified() {
         const getData = new Promise((resolve, reject) => {
             const query = `SELECT * FROM exports_shipments WHERE weight_verified = 0`;
@@ -181,13 +167,13 @@ class ExportsShipments {
         return getData;
     }
 
-    static getExportDetails(key) {
+    static getExportAmtsDetails(key) {
         const Data = new Promise((resolve, reject) => {
-            const query = `SELECT details FROM exports_shipments WHERE shipments_id = ?`;
+            const query = `SELECT exports_shipments.shipments_id,exports_shipments.AWB_no,exports_shipments.status,clients.name AS shipper,clients.primary_email AS email_id,exports_shipments.consignee,exports_shipments.destination,exports_shipments.remote_area,exports_shipments.service, service_provider_id,exports_shipments.shipment_type,exports_shipments.entry_date,exports_shipments.weight_verified,exports_shipments.is_billed,bill_details,exports_shipments.bill_type,custom_clearance FROM exports_shipments INNER JOIN clients ON exports_shipments.shipper_id= clients.client_id WHERE AWB_no = ? AND amounts_entered = 1`;
             dbConnection.query(query, [key], (err, result) => {
                 if (err) reject(err);
                 else {
-                    resolve(result[0]);
+                    resolve(result);
                 }
 
 

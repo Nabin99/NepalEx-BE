@@ -42,24 +42,33 @@ export const searchImportShipment = async (req, res, next) => {
     try {
         const data = await ImportsShipmentsModel.searchShipment(req.params.AWB_no);
         console.log(data);
-        data.details = JSON.parse(data.details);
+        if (data.length == 0)
+            res.status(404).send({ message: "Shipment With AWB No. " + req.params.AWB_no + " Not Found!!!" })
+        else {
+            data[0].details = JSON.parse(data[0].details);
+            data[0].bill_details = JSON.parse(data[0].bill_details);
 
-        res.send(data);
+            res.send(data[0]);
+        }
     }
     catch (err) {
-        res.send(err);
+        console.log(err);
+        res.status(400).send({ message: "An Error Occurred!!!", ...err });
     }
 }
 export const searchImportShipmentAmts = async (req, res, next) => {
     try {
         const data = await ImportsShipmentsModel.searchShipmentAmts(req.params.AWB_no);
-
-        data.bill_details = JSON.parse(data.bill_details);
-        console.log(data);
-        res.send(data);
+        if (data.length == 0)
+            res.status(404).send({ message: "Shipment With AWB No. " + req.params.AWB_no + " Not Found or Unavailable For Modification !!!" });
+        else {
+            data[0].bill_details = JSON.parse(data[0].bill_details);
+            res.send(data[0]);
+        }
     }
     catch (err) {
-        res.send(err);
+        console.log(err);
+        res.status.send({ message: "An Error Occurred!!!", ...err });
     }
 }
 
@@ -76,20 +85,27 @@ export const modifyImportShipmentDetails = async (req, res, next) => {
 
 export const modifyImportShipmentAmts = async (req, res, next) => {
     try {
-        const data = await ImportsShipmentsModel.modifyImportShipmentAmts(req.body);
-        res.send(data);
+        await ImportsShipmentsModel.modifyImportShipmentAmts(req.body);
+        res.send({ message: "Successfully Updated Shipment With id: " + req.body.shipments_id });
     }
     catch (err) {
-        res.send(err);
+        console.log(err)
+        res.status(400).send({ message: "An Error Occurred!!!", ...err });
     }
 }
 
 export const getImportShipmentAmtsNull = async (req, res, next) => {
     try {
         const data = await ImportsShipmentsModel.findImportShipmentAmtsNull();
-        res.send(data);
+        if (data.length == 0)
+            res.status(404).send({ message: "Shipments Not Found!!!" });
+        else {
+            console.log(data);
+            res.send(data);
+        }
     }
     catch (err) {
-        res.send(err);
+        console.log(err)
+        res.status(400).send({ message: "An Error Occurred!!!", ...err });
     }
 }
