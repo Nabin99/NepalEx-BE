@@ -41,11 +41,14 @@ export const modifyDetails = async (req, res, next) => {
 export const getShipmentStatus = async (req, res, next) => {
     try {
         let data = await ExportsShipments.getShipmentStatus(req.params.AWB_no);
-        res.send(data);
+        if (data.length == 0)
+            res.status(404).send({ message: "Shipment Not Found!!!" });
+        else
+            res.send(data[0]);
     }
     catch (err) {
         console.log(err)
-        res.send(err);
+        res.status(400).send({ message: "An Error Occurred!!!" });
 
     }
 };
@@ -137,11 +140,14 @@ export const getExportShipmentAmtsNull = async (req, res, next) => {
 export const getExportShipmentUnverified = async (req, res, next) => {
     try {
         const data = await ExportsShipments.findExportShipmentUnverified();
-        res.send(data);
+        if (data.length == 0)
+            res.status(404).send({ message: "No Shipments Found With Pending Weight Verification!!!" });
+        else
+            res.send(data);
     }
     catch (err) {
         console.log(err)
-        res.send(err);
+        res.status(400).send({ message: "An Error Occured!!!", ...err });
     }
 }
 export const getExportAmtsDetails = async (req, res, next) => {
@@ -161,14 +167,30 @@ export const getExportAmtsDetails = async (req, res, next) => {
 }
 
 export const updateWeight = async (req, res, next) => {
-    console.log(req.body);
     try {
-        let data = await ExportsShipments.updateWeight(req.body);
-        res.send(data);
+        await ExportsShipments.updateWeight(req.body);
+        res.status(202).send({ message: "Successfully Updated Shipment with id " + req.body.shipments_id });
     }
     catch (err) {
-        console.log(err);
-        res.send(err);
+        console.log(err)
+        res.status(400).send({ message: "An Error Occured!!!", ...err });
     }
 }
 
+export const getWeightDetails = async (req, res, next) => {
+    try {
+
+        let data = await ExportsShipments.getWeightDetails(req.params.shipments_id);
+
+        if (data.length == 0)
+            res.status(404).send({ message: `Shipment With AWB No.${req.params.shipments_id} Not Found!!!` });
+        else {
+            data[0].details = JSON.parse(data[0].details);
+            res.send(data[0]);
+        }
+    }
+    catch (err) {
+        console.log(err)
+        res.status(400).send({ message: "An Error Occured!!!", ...err });
+    }
+};

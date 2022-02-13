@@ -14,8 +14,12 @@ export const getAllClientsDetails = async (req, res, next) => {
 export const getClientDetails = async (req, res, next) => {
     try {
         let data = await ClientModel.findOne(req.params.emailId);
-        data.clientInfo = JSON.parse(data.clientInfo);
-        res.send(data);
+        if (data.length == 0)
+            res.status(404).send({ message: "No Data Found!!!" });
+        else {
+            data[0].clientInfo = JSON.parse(data[0].clientInfo);
+            res.send(data[0]);
+        }
     }
     catch (err) {
         res.send(err);
@@ -34,6 +38,7 @@ export const addNewClientDetails = async (req, res, next) => {
 
     }
 }
+
 export const searchClients = async (req, res, next) => {
     try {
         const data = await ClientModel.searchClients(req.query.s);

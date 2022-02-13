@@ -32,7 +32,7 @@ class Client {
             dbConnection.query(query, (err, result) => {
                 if (err) reject(err);
                 else {
-                    resolve(result[0]);
+                    resolve(result);
                 }
             });
         });
@@ -46,7 +46,7 @@ class Client {
                 if (err) reject(err);
                 else {
 
-                    resolve(result[0]);
+                    resolve(result);
                 }
 
 
