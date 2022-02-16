@@ -8,7 +8,7 @@ importsRoute.route('/')
     .post(addNewImport);
 
 importsRoute.get('/id=:id', getImport);
-importsRoute.get('/search', searchImport);
+importsRoute.get('/search_customsppn=:customs_PPN', searchImport);
 importsRoute.put('/modify_import', modifyImport);
 
 export default importsRoute;

@@ -42,7 +42,7 @@ export default class ExportsModel {
             dbConnection.query(query, [key], (err, result) => {
                 if (err) reject(err);
                 else
-                    resolve(result[0]);
+                    resolve(result);
             });
         });
         return getData;

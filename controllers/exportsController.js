@@ -3,14 +3,12 @@ import ExportsModel from "../models/exportsModels.js";
 export const addNewExportsDetails = async (req, res, next) => {
     try {
         const newExport = new ExportsModel(req.body);
-        console.log(req.body);
-        const data = await newExport.save();
-        res.send(data);
-        console.log(data);
+        await newExport.save();
+        res.send({ message: "Successfully Added New Export With customs ppn number " + req.body.customs_PPN });
     }
     catch (err) {
         console.log(err);
-        res.send(err);
+        res.status(400).send({ message: "An Error Occured!!!", ...err });
     }
 }
 
@@ -26,21 +24,27 @@ export const getAllExports = async (req, res, next) => {
 export const getExport = async (req, res, next) => {
     try {
         const data = await ExportsModel.findOne(req.params.customs_PPN);
-        data.details = JSON.parse(data.details);
-        res.send(data);
+        if (data.length == 0)
+            res.status(404).send({ message: "Export Not Found!!!" });
+        else {
+            data[0].details = JSON.parse(data[0].details);
+            res.send(data[0]);
+        }
     }
     catch (err) {
-        res.send(err);
+        console.log(err);
+        res.status(400).send({ message: "An Error Occured!!!", ...err });
     }
 }
 
 export const modifyExport = async (req, res, next) => {
     try {
         console.log(req.body)
-        const data = await ExportsModel.modifyExport(req.body);
-        res.send(data);
+        await ExportsModel.modifyExport(req.body);
+        res.send({ message: "Successfully Updated Imports With id " + req.body.exports_id });
     }
     catch (err) {
-        res.send(err);
+        console.log(err);
+        res.status(400).send({ message: "An Error Occured!!!", ...err });
     }
 }

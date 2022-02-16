@@ -3,56 +3,71 @@ import ImportsModel from "../models/importsModel.js"
 export const addNewImport = async (req, res, next) => {
     try {
         const importData = new ImportsModel(req.body);
-        console.log(req.body);
-        res.send(await importData.save());
+        await importData.save();
+        res.send({ message: "Successfully Added New Import with ppnumber " + req.body.pp_number });
 
     }
     catch (err) {
         console.log(err);
-        res.send(err);
+        res.status(400).send({ message: "An Error Occured!!!", ...err });
     }
 }
 
 export const getAllImports = async (req, res, next) => {
     try {
-        res.send(await ImportsModel.findAll());
+        const data = await ImportsModel.findAll();
+        if (data.length == 0)
+            res.status(404).send({ message: "Import Not Found!!!" });
+        else {
+
+            res.send(data);
+        }
     }
     catch (err) {
-        res.send(err);
+        console.log(err);
+        res.status(400).send({ message: "An Error Occured!!!", ...err });
     }
 }
 
 export const getImport = async (req, res, next) => {
     try {
         const data = await ImportsModel.findOne(req.params.id);
-        data.details = JSON.parse(data.details);
-        res.send(data);
+        if (data.length == 0)
+            res.status(404).send({ message: "Import Not Found!!!" });
+        else {
+            data[0].details = JSON.parse(data[0].details);
+            res.send(data[0]);
+        }
     }
     catch (err) {
-        res.send(err);
+        console.log(err);
+        res.status(400).send({ message: "An Error Occured!!!", ...err });
     }
 }
 
 export const searchImport = async (req, res, next) => {
     try {
-        const data = await ImportsModel.searchImport(req.query);
-        data.details = JSON.parse(data.details);
-        res.send(data);
+        const data = await ImportsModel.searchImport(req.params.customs_PPN);
+        if (data.length == 0)
+            res.status(404).send({ message: "Import Not Found!!!" });
+        else {
+            data[0].details = JSON.parse(data[0].details);
+            res.send(data[0]);
+        }
     }
     catch (err) {
-        res.send(err);
+        console.log(err);
+        res.status(400).send({ message: "An Error Occured!!!", ...err });
     }
 }
 
 export const modifyImport = async (req, res, next) => {
     try {
-        console.log(req.body)
-        const data = await ImportsModel.modifyImport(req.body);
-        console.log(data)
-        res.sendStatus(200);
+        await ImportsModel.modifyImport(req.body);
+        res.send({ message: "Successfully Updated Import with id " + req.body.imports_id });
     }
     catch (err) {
-        console.log(err)
-        res.send(err);
+        console.log(err);
+        res.status(400).send({ message: "An Error Occured!!!", ...err });
     }
 }
