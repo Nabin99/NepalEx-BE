@@ -15,13 +15,17 @@ export const getAllEmployeeDetails = async (req, res, next) => {
 export const getEmployeeDetails = async (req, res, next) => {
     try {
         let data = await EmployeesModel.findOne(req.params.id);
-
-        data.employee_info = JSON.parse(data.employee_info);
-        console.log(data);
-        res.send(data);
+        if (data.length == 0) {
+            res.status(404).send({ message: "Employee With Emailid " + req.params.id + " Not Found !!!" })
+        }
+        else {
+            data[0].employee_info = JSON.parse(data[0].employee_info);
+            res.send(data[0]);
+        }
     }
     catch (err) {
-        res.send(err);
+        console.log(err);
+        res.status(400).send({ message: "An Error Occured!!!", ...err });
     }
 };
 
@@ -29,15 +33,12 @@ export const addNewEmployeeDetails = async (req, res, next) => {
     const employee = new EmployeesModel(req.body);
 
     try {
-        const data = await employee.save()
-        res.send(data);
-        console.log(req.body);
-        console.log(data);
-
+        await employee.save()
+        res.send({ message: "Successfully Added New Employee Details" });
     }
     catch (err) {
-        res.send(err);
         console.log(err);
+        res.status(400).send({ message: "An Error Occured!!!", ...err });
     }
 }
 
@@ -56,12 +57,13 @@ export const getActiveEmployeeDetails = async (req, res, next) => {
 export const updateEmployeeDetails = async (req, res, next) => {
 
     try {
-        const data = await EmployeesModel.updateEmployeeDetails(req.body);
-        res.send(data);
+        await EmployeesModel.updateEmployeeDetails(req.body);
+        res.send({ message: "Successfully Added New Employee Details" });
 
     }
     catch (err) {
-        res.send(err);
         console.log(err);
+        res.status(400).send({ message: "An Error Occured!!!", ...err });
+
     }
 };

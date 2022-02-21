@@ -6,7 +6,7 @@ export default class Employees {
         this.data.employee_info = JSON.stringify(this.data.employee_info);
         /* this.image = data.profileImage;
         this.documents = JSON.stringify(data.documents); */
-        this.registered_by = 'employee';
+        this.data.registered_by = 'employee';
     }
 
     save() {
@@ -67,7 +67,7 @@ export default class Employees {
                 if (err) reject(err);
                 else {
 
-                    resolve(result[0]);
+                    resolve(result);
                 }
 
 
