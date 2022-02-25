@@ -157,6 +157,7 @@ export const getExportAmtsDetails = async (req, res, next) => {
             res.status(404).send({ message: "Shipment With ID " + req.params.AWB_no + " Not Found or Unavailable For Modification!!!" })
         else {
             data[0].bill_details = JSON.parse(data[0].bill_details);
+            data[0].details = JSON.parse(data[0].details);
             res.send(data[0]);
         }
     }

@@ -169,7 +169,7 @@ class ExportsShipments {
 
     static getExportAmtsDetails(key) {
         const Data = new Promise((resolve, reject) => {
-            const query = `SELECT exports_shipments.shipments_id,exports_shipments.AWB_no,exports_shipments.status,clients.name AS shipper,clients.primary_email AS email_id,exports_shipments.consignee,exports_shipments.destination,exports_shipments.remote_area,exports_shipments.service, service_provider_id,exports_shipments.shipment_type,exports_shipments.entry_date,exports_shipments.weight_verified,exports_shipments.is_billed,bill_details,exports_shipments.bill_type,custom_clearance FROM exports_shipments INNER JOIN clients ON exports_shipments.shipper_id= clients.client_id WHERE AWB_no = ? AND amounts_entered = 1`;
+            const query = `SELECT exports_shipments.shipments_id,exports_shipments.AWB_no,exports_shipments.status,clients.name AS shipper,clients.primary_email AS email_id,exports_shipments.consignee,exports_shipments.destination,exports_shipments.remote_area,exports_shipments.service, service_provider_id,exports_shipments.shipment_type,exports_shipments.entry_date,details,exports_shipments.weight_verified,exports_shipments.is_billed,bill_details,exports_shipments.bill_type,custom_clearance FROM exports_shipments INNER JOIN clients ON exports_shipments.shipper_id= clients.client_id WHERE AWB_no = ? AND amounts_entered = 1`;
             dbConnection.query(query, [key], (err, result) => {
                 if (err) reject(err);
                 else {
