@@ -237,5 +237,25 @@ class ExportsShipments {
     }
 
 
+
+
+
+    static getUserExports(key) {
+        const Data = new Promise((resolve, reject) => {
+            const query = `SELECT shipments_id,AWB_no,status,consignee,destination,service, service_providers.name as service_provider,shipment_type,entry_date,bill_details,is_billed,bill_type,custom_clearance FROM exports_shipments INNER JOIN service_providers ON exports_shipments.service_provider_id= service_providers.id WHERE shipper_id = ?`;
+            dbConnection.query(query, [key], (err, result) => {
+                if (err) reject(err);
+                else {
+                    resolve(result.map((value) => ({ ...value, bill_details: value.bill_details ? { ...JSON.parse(value.bill_details) } : null })));
+                }
+            });
+
+        });
+
+        return Data;
+    }
+
+
+
 }
 export default ExportsShipments;

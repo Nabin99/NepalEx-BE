@@ -1,4 +1,6 @@
 import ClientModel from '../models/clientModels.js';
+import ExportsShipments from '../models/exportsShipmentsModels.js';
+import ImportsShipmentsModel from '../models/importsShipmentsModel.js';
 
 export const getAllClientsDetails = async (req, res, next) => {
     try {
@@ -50,6 +52,37 @@ export const searchClients = async (req, res, next) => {
     }
     catch (err) {
         console.log(err);
-        res.status(400).send({ message: "An Error Occurred!!!", ...err })
+        res.status(400).send({ message: "An Error Occurred!!!", ...err });
+    }
+
+
+}
+export const getExportShipments = async (req, res, next) => {
+    try {
+        const data = await ExportsShipments.getUserExports(req.params.client);
+        if (data.length == 0)
+            res.status(404).send({ message: "No Data Found!!!" });
+        else
+            res.send(data);
+
+    }
+    catch (err) {
+        console.log(err);
+        res.status(400).send({ message: "An Error Occurred!!!" });
+    }
+}
+
+export const getImportShipments = async (req, res, next) => {
+    try {
+        const data = await ImportsShipmentsModel.getUserImports(req.params.client);
+        if (data.length == 0)
+            res.status(404).send({ message: "No Data Found!!!" });
+        else
+            res.send(data);
+
+    }
+    catch (err) {
+        console.log(err);
+        res.status(400).send({ message: "An Error Occurred!!!" });
     }
 }
