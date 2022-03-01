@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { addNewShipmentDetails, getWeightDetails, getActiveStatusShipments, getExportShipmentAmtsNull, getShipmentDetails, getExportShipmentUnverified, modifyDetails, modifyExportShipmentAmts, updateShipmentsStatus, getExportAmtsDetails, updateWeight, getShipment } from "../../controllers/exportsShipmentsController.js";
+import { addNewShipmentDetails, getWeightDetails, getActiveStatusShipments, getExportShipmentAmtsNull, getShipmentDetails, getExportShipmentUnverified, modifyDetails, modifyExportShipmentAmts, updateShipmentsStatus, getExportAmtsDetails, updateWeight, getShipment, getStatusCount } from "../../controllers/exportsShipmentsController.js";
 
 const exportsShipmentsRoute = Router();
 
@@ -19,5 +19,8 @@ exportsShipmentsRoute.get('/shipment_billdetails_awbno=:AWB_no', getExportAmtsDe
 exportsShipmentsRoute.put('/update_weight', updateWeight);
 exportsShipmentsRoute.get('/shipment_weight_unverified', getExportShipmentUnverified);
 exportsShipmentsRoute.get('/weight_details_id=:shipments_id', getWeightDetails);
+
+
+exportsShipmentsRoute.get('/status_count', getStatusCount);
 
 export default exportsShipmentsRoute;

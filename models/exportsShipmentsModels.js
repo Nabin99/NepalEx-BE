@@ -257,5 +257,27 @@ class ExportsShipments {
 
 
 
+    static getStatusCount() {
+        const Data = new Promise((resolve, reject) => {
+
+            const key = new Date(Date.now() - 7889400000);
+            const query = `SELECT status,COUNT ( * ) FROM exports_shipments WHERE entry_date >= ? GROUP BY status `;
+            dbConnection.query(query, [key], (err, result) => {
+                if (err) reject(err);
+                else {
+                    resolve(result);
+                }
+
+
+            });
+
+        });
+
+        return Data;
+    }
+
+
+
+
 }
 export default ExportsShipments;
