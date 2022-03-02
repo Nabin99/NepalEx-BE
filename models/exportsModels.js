@@ -62,4 +62,43 @@ export default class ExportsModel {
         });
         return getData;
     }
+
+    static getShipmentsDate() {
+        const Data = new Promise((resolve, reject) => {
+
+            const key = new Date(Date.now() - 2629800000);
+            const query = `SELECT entry_date FROM exports WHERE entry_date >= ?`;
+            dbConnection.query(query, [key], (err, result) => {
+                if (err) reject(err);
+                else {
+                    resolve(result);
+                }
+
+
+            });
+
+        });
+
+        return Data;
+    }
+
+
+    static getBillStatusCount() {
+        const Data = new Promise((resolve, reject) => {
+
+            const key = new Date(Date.now() - 2629800000);
+            const query = `SELECT is_billed,COUNT ( * ) FROM exports WHERE entry_date >= ? OR is_billed = 0 GROUP BY is_billed `;
+            dbConnection.query(query, [key], (err, result) => {
+                if (err) reject(err);
+                else {
+                    resolve(result);
+                }
+
+
+            });
+
+        });
+
+        return Data;
+    }
 }

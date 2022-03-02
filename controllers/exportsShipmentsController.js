@@ -203,7 +203,39 @@ export const getStatusCount = async (req, res, next) => {
         if (data.length == 0)
             res.status(404).send({ message: `No Shipments` });
         else {
-            console.log(data);
+            res.send(data);
+        }
+    }
+    catch (err) {
+        console.log(err)
+        res.status(400).send({ message: "An Error Occured!!!", ...err });
+    }
+};
+
+export const getShipmentsDate = async (req, res, next) => {
+    try {
+
+        let data = await ExportsShipments.getShipmentsDate();
+
+        if (data.length == 0)
+            res.status(404).send({ message: `No Shipments` });
+        else {
+            res.send(data);
+        }
+    }
+    catch (err) {
+        console.log(err)
+        res.status(400).send({ message: "An Error Occured!!!", ...err });
+    }
+};
+export const getBillStatusCount = async (req, res, next) => {
+    try {
+
+        let data = await ExportsShipments.getBillStatusCount();
+
+        if (data.length == 0)
+            res.status(404).send({ message: `No Shipments` });
+        else {
             res.send(data);
         }
     }

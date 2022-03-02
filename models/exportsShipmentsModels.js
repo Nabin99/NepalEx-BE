@@ -260,7 +260,7 @@ class ExportsShipments {
     static getStatusCount() {
         const Data = new Promise((resolve, reject) => {
 
-            const key = new Date(Date.now() - 7889400000);
+            const key = new Date(Date.now() - 2629800000);
             const query = `SELECT status,COUNT ( * ) FROM exports_shipments WHERE entry_date >= ? GROUP BY status `;
             dbConnection.query(query, [key], (err, result) => {
                 if (err) reject(err);
@@ -276,6 +276,44 @@ class ExportsShipments {
         return Data;
     }
 
+    static getShipmentsDate() {
+        const Data = new Promise((resolve, reject) => {
+
+            const key = new Date(Date.now() - 2629800000);
+            const query = `SELECT entry_date FROM exports_shipments WHERE entry_date >= ?`;
+            dbConnection.query(query, [key], (err, result) => {
+                if (err) reject(err);
+                else {
+                    resolve(result);
+                }
+
+
+            });
+
+        });
+
+        return Data;
+    }
+
+
+    static getBillStatusCount() {
+        const Data = new Promise((resolve, reject) => {
+
+            const key = new Date(Date.now() - 2629800000);
+            const query = `SELECT is_billed,COUNT ( * ) FROM exports_shipments WHERE entry_date >= ? OR is_billed = 0 GROUP BY is_billed `;
+            dbConnection.query(query, [key], (err, result) => {
+                if (err) reject(err);
+                else {
+                    resolve(result);
+                }
+
+
+            });
+
+        });
+
+        return Data;
+    }
 
 
 
