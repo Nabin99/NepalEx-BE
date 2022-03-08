@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { addNewShipmentDetails, getWeightDetails, getBillStatusCount, getActiveStatusShipments, getExportShipmentAmtsNull, getShipmentDetails, getExportShipmentUnverified, modifyDetails, modifyExportShipmentAmts, updateShipmentsStatus, getExportAmtsDetails, updateWeight, getShipment, getStatusCount, getShipmentsDate } from "../../controllers/exportsShipmentsController.js";
+import { addNewShipmentDetails, getWeightDetails, setBilled, getAllUnBilledShipments, getBillStatusCount, getActiveStatusShipments, getExportShipmentAmtsNull, getShipmentDetails, getExportShipmentUnverified, modifyDetails, modifyExportShipmentAmts, updateShipmentsStatus, getExportAmtsDetails, updateWeight, getShipment, getStatusCount, getShipmentsDate } from "../../controllers/exportsShipmentsController.js";
 
 const exportsShipmentsRoute = Router();
 
@@ -25,5 +25,7 @@ exportsShipmentsRoute.get('/status_count', getStatusCount);
 exportsShipmentsRoute.get('/shipments_date', getShipmentsDate);
 
 exportsShipmentsRoute.get('/bill_status_count', getBillStatusCount);
+exportsShipmentsRoute.get('/bill/details', getAllUnBilledShipments);
+exportsShipmentsRoute.post('/bill/setBilled', setBilled);
 
 export default exportsShipmentsRoute;

@@ -184,4 +184,46 @@ export default class ImportsShipmentsModel {
         return Data;
     }
 
+    static getAllUnBilledShipments() {
+        const Data = new Promise((resolve, reject) => {
+            const query = `SELECT AWB_no,clients.name AS shipper,clients.primary_email AS email_id, consignee, origin,service,service_provider_id, service_providers.name as service_provider, entry_date,details, bill_details, is_billed, bill_type FROM ((imports_shipments INNER JOIN service_providers ON imports_shipments.service_provider_id = service_providers.id) INNER JOIN clients ON imports_shipments.shipper_id= clients.client_id) WHERE is_billed = 0 AND amounts_entered = 1`
+            dbConnection.query(query, (err, result) => {
+                if (err) reject(err);
+                else {
+                    resolve(result.map(obj => ({
+                        ...obj, details: JSON.parse(obj.details), bill_details: JSON.parse(obj.bill_details)
+
+                    })));
+                }
+
+
+            });
+
+        });
+
+        return Data;
+    }
+    static setBilled(list) {
+        const Data = new Promise((resolve, reject) => {
+            let query = `UPDATE imports_shipments SET is_billed= 1  WHERE AWB_no = ? `;
+            for (let i = 1; i < list.length; i++) {
+                query += "OR AWB_no = ? "
+            }
+
+            dbConnection.query(query, [...list], (err, result) => {
+                if (err) reject(err);
+                else {
+                    resolve(result);
+                }
+
+
+            });
+
+        });
+
+        return Data;
+    }
+
+
+
 }
