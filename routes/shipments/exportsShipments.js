@@ -28,4 +28,5 @@ exportsShipmentsRoute.get('/bill_status_count', getBillStatusCount);
 exportsShipmentsRoute.get('/bill/details', getAllUnBilledShipments);
 exportsShipmentsRoute.post('/bill/setBilled', setBilled);
 
+
 export default exportsShipmentsRoute;

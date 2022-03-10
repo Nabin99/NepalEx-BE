@@ -62,9 +62,9 @@ export default class ImportsModel {
     static modifyImport(data) {
         data.details = JSON.stringify(data.details);
         const saveData = new Promise((resolve, reject) => {
-            const query = `UPDATE imports SET shipper = ?,shipment_type = ?,mawb_no = ?,hawb_no = ?,status = ?, details = ?,pp_number = ?, finalized_date =? ,is_billed = ? , bill_no = ? WHERE imports_id = ?`;
+            const query = `UPDATE imports SET shipper = ?,shipment_type = ?,mawb_no = ?,hawb_no = ?,status = ?, details = ?,pp_number = ?, finalized_date =? WHERE imports_id = ?`;
 
-            const values = [data.shipper, data.shipment_type, data.mawb_no, data.hawb_no, data.status, data.details, data.pp_number, data.finalized_date, data.is_billed, data.bill_no, data.imports_id];
+            const values = [data.shipper, data.shipment_type, data.mawb_no, data.hawb_no, data.status, data.details, data.pp_number, data.finalized_date, data.imports_id];
             dbConnection.query(query, values, (err, result) => {
                 if (err) reject(err);
                 else
@@ -114,5 +114,47 @@ export default class ImportsModel {
 
         return Data;
     }
+
+
+    static getAllUnBilledShipments() {
+        const Data = new Promise((resolve, reject) => {
+            const query = `SELECT shipper,shipment_type,mawb_no,hawb_no,status,details,entry_date,finalized_date,pp_number FROM imports WHERE is_billed = 0  AND status != "Returned"`
+            dbConnection.query(query, (err, result) => {
+                if (err) reject(err);
+                else {
+                    resolve(result.map(obj => ({
+                        ...obj, details: JSON.parse(obj.details)
+
+                    })));
+                }
+
+
+            });
+
+        });
+
+        return Data;
+    }
+    static setBilled(data) {
+        const Data = new Promise((resolve, reject) => {
+            let query = `UPDATE imports SET is_billed= 1, bill_no = ?  WHERE pp_number = ? `;
+            for (let i = 1; i < data.list.length; i++) {
+                query += "OR pp_number = ? "
+            }
+
+            dbConnection.query(query, [data.bill_no, ...data.list], (err, result) => {
+                if (err) reject(err);
+                else {
+                    resolve(result);
+                }
+
+
+            });
+
+        });
+
+        return Data;
+    }
+
 
 }

@@ -203,14 +203,14 @@ export default class ImportsShipmentsModel {
 
         return Data;
     }
-    static setBilled(list) {
+    static setBilled(data) {
         const Data = new Promise((resolve, reject) => {
-            let query = `UPDATE imports_shipments SET is_billed= 1  WHERE AWB_no = ? `;
-            for (let i = 1; i < list.length; i++) {
+            let query = `UPDATE imports_shipments SET is_billed= 1, bill_no = ?  WHERE AWB_no = ? `;
+            for (let i = 1; i < data.list.length; i++) {
                 query += "OR AWB_no = ? "
             }
 
-            dbConnection.query(query, [...list], (err, result) => {
+            dbConnection.query(query, [data.bill_no, ...data.list], (err, result) => {
                 if (err) reject(err);
                 else {
                     resolve(result);
@@ -223,6 +223,8 @@ export default class ImportsShipmentsModel {
 
         return Data;
     }
+
+
 
 
 

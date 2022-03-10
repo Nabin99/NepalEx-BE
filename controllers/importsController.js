@@ -105,3 +105,32 @@ export const getBillStatusCount = async (req, res, next) => {
         res.status(400).send({ message: "An Error Occured!!!", ...err });
     }
 };
+
+export const getAllUnBilledShipments = async (req, res, next) => {
+    try {
+
+        let data = await ImportsModel.getAllUnBilledShipments();
+
+        if (data.length == 0)
+            res.status(404).send({ message: `No Shipments` });
+        else {
+            res.send(data);
+        }
+    }
+    catch (err) {
+        console.log(err)
+        res.status(400).send({ message: "An Error Occured!!!", ...err });
+    }
+};
+export const setBilled = async (req, res, next) => {
+    try {
+
+        await ImportsModel.setBilled(req.body);
+        res.send({ message: `Successful` });
+
+    }
+    catch (err) {
+        console.log(err)
+        res.status(400).send({ message: "An Error Occured!!!", ...err });
+    }
+};

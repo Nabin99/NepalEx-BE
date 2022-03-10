@@ -316,7 +316,7 @@ class ExportsShipments {
     }
     static getAllUnBilledShipments() {
         const Data = new Promise((resolve, reject) => {
-            const query = `SELECT AWB_no, status,clients.name AS shipper,clients.primary_email AS email_id, consignee, destination, postal_code, remote_area,service, service_provider_id,service_providers.name as service_provider, shipment_type, entry_date,details, bill_details, is_billed, bill_type,weight_verified, custom_clearance FROM ((exports_shipments INNER JOIN service_providers ON exports_shipments.service_provider_id = service_providers.id) INNER JOIN clients ON exports_shipments.shipper_id= clients.client_id) WHERE is_billed = 0 AND amounts_entered = 1`
+            const query = `SELECT AWB_no, status,clients.name AS shipper,clients.primary_email AS email_id, consignee, destination, postal_code, remote_area,service, service_provider_id,service_providers.name as service_provider, shipment_type, entry_date,details, bill_details, is_billed, bill_type,weight_verified, custom_clearance FROM ((exports_shipments INNER JOIN service_providers ON exports_shipments.service_provider_id = service_providers.id) INNER JOIN clients ON exports_shipments.shipper_id= clients.client_id) WHERE is_billed = 0 AND amounts_entered = 1 AND status != "Returned"`
             dbConnection.query(query, (err, result) => {
                 if (err) reject(err);
                 else {
@@ -333,14 +333,14 @@ class ExportsShipments {
 
         return Data;
     }
-    static setBilled(list) {
+    static setBilled(data) {
         const Data = new Promise((resolve, reject) => {
-            let query = `UPDATE exports_shipments SET is_billed= 1  WHERE AWB_no = ? `;
-            for (let i = 1; i < list.length; i++) {
+            let query = `UPDATE exports_shipments SET is_billed= 1, bill_no = ?  WHERE AWB_no = ? `;
+            for (let i = 1; i < data.list.length; i++) {
                 query += "OR AWB_no = ? "
             }
 
-            dbConnection.query(query, [...list], (err, result) => {
+            dbConnection.query(query, [data.bill_no, ...data.list], (err, result) => {
                 if (err) reject(err);
                 else {
                     resolve(result);

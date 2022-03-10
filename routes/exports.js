@@ -1,4 +1,4 @@
-import { addNewExportsDetails, getShipmentsDate, getBillStatusCount, getAllExports, getExport, modifyExport } from "../controllers/exportsController.js";
+import { addNewExportsDetails, getShipmentsDate, getAllUnBilledShipments, setBilled, getBillStatusCount, getAllExports, getExport, modifyExport } from "../controllers/exportsController.js";
 import { Router } from "express";
 
 const exportsRoute = Router();
@@ -12,5 +12,8 @@ exportsRoute.put('/modify_shipment', modifyExport);
 exportsRoute.get('/shipments_date', getShipmentsDate);
 
 exportsRoute.get('/bill_status_count', getBillStatusCount);
+
+exportsRoute.get('/bill/details', getAllUnBilledShipments);
+exportsRoute.post('/bill/setBilled', setBilled);
 
 export default exportsRoute;
