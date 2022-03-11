@@ -1,4 +1,5 @@
 import dbConnection from "../dbConn/dbConn.js";
+import hashPassword from "../hashPassword.js";
 
 export default class Employees {
     constructor(data) {
@@ -9,7 +10,8 @@ export default class Employees {
         this.data.registered_by = 'employee';
     }
 
-    save() {
+    async save() {
+        this.data.password = await hashPassword(this.data.password);
         const saveData = new Promise((resolve, reject) => {
             const query = `INSERT INTO employees (name,primary_email,primary_contact,gov_id,permanent_address,temporary_address,department,password,employee_info,registered_by)
              VALUES (?)`;
@@ -43,7 +45,8 @@ export default class Employees {
         return allData;
 
     }
-    static searchEmployee(email, password) {
+    static async searchEmployee(email, password) {
+        password = await hashPassword(password);
         const Data = new Promise((resolve, reject) => {
             const query = `SELECT employee_id,name,primary_email,primary_contact,department,image FROM employees WHERE primary_email = ? and password = ?`;
             dbConnection.query(query, [email, password], (err, result) => {

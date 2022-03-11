@@ -1,4 +1,5 @@
 import dbConnection from "../dbConn/dbConn.js";
+import hashPassword from "../hashPassword.js";
 
 
 class Client {
@@ -10,7 +11,8 @@ class Client {
 
     }
 
-    save() {
+    async save() {
+        this.data.password = await hashPassword(this.data.password);
         const saveData = new Promise((resolve, reject) => {
             const query = `INSERT INTO clients (account_type,name,primary_email,primary_contact,gov_id,address,password,registered_by,client_info)
              VALUES (?)`;
