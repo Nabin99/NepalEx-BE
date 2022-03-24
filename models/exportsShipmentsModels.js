@@ -261,7 +261,7 @@ class ExportsShipments {
         const Data = new Promise((resolve, reject) => {
 
             const key = new Date(Date.now() - 2629800000);
-            const query = `SELECT status,COUNT ( * ) FROM exports_shipments WHERE entry_date >= ? GROUP BY status `;
+            const query = `SELECT status,COUNT ( * ) FROM exports_shipments WHERE entry_date >= ? OR status!="Delivered" AND status!="returned" GROUP BY status `;
             dbConnection.query(query, [key], (err, result) => {
                 if (err) reject(err);
                 else {

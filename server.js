@@ -17,7 +17,7 @@ const Port = process.env.PORT || 5000;
 const app = express();
 
 const corsOptions = {
-    origin: ['http://192.168.1.69:3000', 'http://localhost:3000'],
+    origin: ['http://localhost:3000'],
     optionsSuccessStatus: 200,
 }
 
